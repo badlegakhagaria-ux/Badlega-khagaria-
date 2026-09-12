@@ -869,22 +869,24 @@ if (form) {
 
     const f = new FormData(form);
 
-    const { error } = await supabaseClient
-      .from("volunteers")
-      .insert([{
-        full_name: f.get("full_name") || "",
-        instagram_username: f.get("instagram") || "",
-        email: f.get("email") || null,
-        village_city: f.get("villageCity") || "",
-        education_occupation: f.get("educationOccupation") || "",
-        area_of_interest: f.get("interest") || "",
-        why_join: f.get("whyJoin") || "",
-        skills: f.get("skills") || "",
-        prior_social_work: f.get("priorWork") || "",
-        positive_change: f.get("positiveChange") || "",
-        preferred_contact: f.get("preferredContact") || "Instagram",
-        consent: true
-      }]);
+    const f = new FormData(form);
+
+const { error } = await supabaseClient
+  .from("volunteers")
+  .insert([{
+    full_name: f.get("full_name") || "",
+    instagram_username: f.get("instagram") || "",
+    email: f.get("email") || null,
+    village_city: f.get("village_city") || "",
+    education_occupation: f.get("education_occupation") || "",
+    area_of_interest: f.get("interest") || "",
+    why_join: f.get("why_join") || "",
+    skills: f.get("skills") || "",
+    prior_social_work: f.get("prior_work") || "",
+    positive_change: f.get("positive_change") || "",
+    preferred_contact: f.get("preferred_contact") || "Instagram",
+    consent: true
+  }]);
 
     if (error) {
       alert("Application submit nahi ho paya. Please try again.");
