@@ -3,292 +3,1124 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Badlega Khagaria | A Voice of Change</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   font-family:Arial,Helvetica,sans-serif;
   background:#f7f9fc;
-  color:#10233f;
+  color:#172033;
   line-height:1.6;
 }
+
+a{
+  text-decoration:none;
+  color:inherit;
+}
+
+button{
+  font-family:inherit;
+  cursor:pointer;
+}
+
+/* HEADER */
 header{
-  background:#fff;
-  padding:15px 6%;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:white;
+  box-shadow:0 3px 18px rgba(0,0,0,.08);
+}
+
+.navbar{
+  max-width:1200px;
+  margin:auto;
+  padding:14px 22px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  position:sticky;
-  top:0;
-  z-index:10;
-  box-shadow:0 2px 15px rgba(0,0,0,.08);
 }
-.logo{
+
+.brand{
   display:flex;
   align-items:center;
-  gap:10px;
-  font-weight:800;
-  color:#0757a6;
-  font-size:18px;
+  gap:12px;
 }
-.logo span{
-  background:#ffd21c;
-  padding:8px;
+
+.logo{
+  width:48px;
+  height:48px;
   border-radius:50%;
+  background:#ffd21c;
+  color:#0757a6;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:900;
+  font-size:20px;
+  border:3px solid #0757a6;
 }
-nav a{
-  margin-left:18px;
-  text-decoration:none;
-  color:#17304f;
+
+.brand-name{
+  font-size:20px;
+  font-weight:900;
+  color:#0757a6;
+  letter-spacing:.5px;
+}
+
+.nav-links{
+  display:flex;
+  gap:22px;
+  align-items:center;
+}
+
+.nav-links a{
   font-size:14px;
-  font-weight:600;
+  font-weight:700;
+  color:#24344d;
 }
+
+.nav-links a:hover{
+  color:#0757a6;
+}
+
+.menu-btn{
+  display:none;
+  border:0;
+  background:#0757a6;
+  color:white;
+  padding:10px 13px;
+  border-radius:9px;
+  font-size:20px;
+}
+
+/* HERO */
 .hero{
-  min-height:78vh;
+  min-height:90vh;
+  background:linear-gradient(135deg,#0757a6,#087bd0);
+  color:white;
   display:flex;
   align-items:center;
   justify-content:center;
   text-align:center;
-  padding:60px 20px;
-  background:linear-gradient(135deg,#0757a6,#0c78d4);
-  color:white;
+  padding:80px 20px;
 }
+
+.hero-inner{
+  max-width:950px;
+}
+
+.badge{
+  display:inline-block;
+  background:#ffd21c;
+  color:#0757a6;
+  padding:8px 16px;
+  border-radius:30px;
+  font-weight:800;
+  font-size:13px;
+  margin-bottom:22px;
+}
+
 .hero h1{
-  font-size:clamp(42px,9vw,76px);
-  letter-spacing:1px;
+  font-size:clamp(42px,8vw,82px);
+  line-height:1;
+  letter-spacing:2px;
   font-weight:900;
 }
+
 .hero h2{
   color:#ffd21c;
-  margin:10px 0 20px;
-  font-size:clamp(18px,4vw,28px);
+  margin-top:22px;
+  font-size:clamp(17px,3vw,28px);
+  letter-spacing:1px;
 }
+
 .hero p{
-  max-width:700px;
-  margin:auto;
-  font-size:18px;
-  opacity:.95;
+  max-width:750px;
+  margin:24px auto 0;
+  font-size:19px;
+  opacity:.96;
 }
+
 .buttons{
-  margin-top:30px;
+  margin-top:35px;
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
 }
+
 .btn{
   display:inline-block;
-  padding:13px 22px;
-  margin:6px;
+  padding:14px 25px;
   border-radius:30px;
-  text-decoration:none;
-  font-weight:700;
+  font-weight:800;
+  border:2px solid transparent;
 }
-.primary{
+
+.btn-yellow{
   background:#ffd21c;
-  color:#10233f;
+  color:#172033;
 }
-.secondary{
-  border:1px solid white;
+
+.btn-outline{
+  border-color:white;
   color:white;
 }
+
+.btn-blue{
+  background:#0757a6;
+  color:white;
+}
+
+/* GENERAL */
 section{
-  padding:65px 7%;
+  padding:75px 20px;
 }
-.title{
-  text-align:center;
-  margin-bottom:35px;
-}
-.title h2{
-  font-size:32px;
-  color:#0757a6;
-}
-.cards{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:20px;
-}
-.card{
-  background:#fff;
-  padding:25px;
-  border-radius:18px;
-  box-shadow:0 5px 25px rgba(0,0,0,.07);
-}
-.card h3{
-  color:#0757a6;
-  margin-bottom:10px;
-}
-.about{
-  background:white;
-  text-align:center;
-}
-.about p{
-  max-width:850px;
+
+.container{
+  max-width:1100px;
   margin:auto;
 }
-.join{
+
+.section-title{
+  text-align:center;
+  margin-bottom:45px;
+}
+
+.section-title h2{
+  font-size:36px;
+  color:#0757a6;
+}
+
+.section-title p{
+  max-width:700px;
+  margin:10px auto;
+  color:#667085;
+}
+
+/* MISSION */
+.mission-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.card{
+  background:white;
+  padding:28px;
+  border-radius:18px;
+  box-shadow:0 8px 28px rgba(0,0,0,.07);
+}
+
+.card-icon{
+  font-size:35px;
+  margin-bottom:12px;
+}
+
+.card h3{
+  color:#0757a6;
+  margin-bottom:8px;
+}
+
+.card p{
+  color:#667085;
+}
+
+/* VALUES */
+.values{
   background:#eef6ff;
-  text-align:center;
 }
-footer{
-  background:#10233f;
+
+.value-list{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+}
+
+.value{
+  background:white;
+  padding:22px;
+  border-radius:15px;
+  border-left:5px solid #ffd21c;
+}
+
+.value strong{
+  color:#0757a6;
+}
+
+/* NEWS */
+.news-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.news-card{
+  background:white;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 7px 25px rgba(0,0,0,.07);
+}
+
+.news-top{
+  background:#0757a6;
   color:white;
-  text-align:center;
-  padding:30px 15px;
+  padding:25px;
+  font-size:34px;
 }
-footer b{color:#ffd21c}
-@media(max-width:700px){
-  nav{display:none}
-  section{padding:50px 5%}
+
+.news-body{
+  padding:22px;
+}
+
+.news-body h3{
+  color:#0757a6;
+  margin-bottom:8px;
+}
+
+.news-body p{
+  color:#667085;
+  font-size:14px;
+}
+
+.date{
+  display:inline-block;
+  margin-top:14px;
+  font-size:12px;
+  font-weight:700;
+  color:#777;
+}
+
+/* EVENTS */
+.events{
+  background:#f1f5f9;
+}
+
+.event{
+  background:white;
+  padding:22px;
+  border-radius:16px;
+  margin-bottom:15px;
+  display:flex;
+  gap:20px;
+  align-items:center;
+  box-shadow:0 5px 18px rgba(0,0,0,.05);
+}
+
+.event-date{
+  min-width:80px;
+  text-align:center;
+  background:#ffd21c;
+  color:#0757a6;
+  padding:10px;
+  border-radius:12px;
+  font-weight:900;
+}
+
+.event h3{
+  color:#0757a6;
+}
+
+/* IMPACT */
+.impact{
+  background:#0757a6;
+  color:white;
+}
+
+.impact .section-title h2{
+  color:white;
+}
+
+.impact .section-title p{
+  color:#dcecff;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:18px;
+}
+
+.stat{
+  text-align:center;
+  background:rgba(255,255,255,.1);
+  padding:28px 15px;
+  border-radius:18px;
+}
+
+.stat h3{
+  color:#ffd21c;
+  font-size:38px;
+}
+
+.stat p{
+  color:white;
+}
+
+/* JOIN */
+.form-box{
+  max-width:850px;
+  margin:auto;
+  background:white;
+  padding:32px;
+  border-radius:22px;
+  box-shadow:0 10px 35px rgba(0,0,0,.08);
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.field.full{
+  grid-column:1/-1;
+}
+
+label{
+  font-weight:700;
+  font-size:14px;
+  color:#344054;
+}
+
+input,select,textarea{
+  width:100%;
+  border:1px solid #d0d5dd;
+  border-radius:10px;
+  padding:13px;
+  font-size:15px;
+  outline:none;
+  background:white;
+}
+
+input:focus,select:focus,textarea:focus{
+  border-color:#0757a6;
+}
+
+textarea{
+  min-height:120px;
+  resize:vertical;
+}
+
+.checkbox{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  margin:20px 0;
+}
+
+.checkbox input{
+  width:auto;
+  margin-top:5px;
+}
+
+/* CERTIFICATE */
+.verify{
+  background:#eef6ff;
+}
+
+.verify-box{
+  max-width:650px;
+  margin:auto;
+  background:white;
+  padding:35px;
+  border-radius:20px;
+  box-shadow:0 8px 30px rgba(0,0,0,.07);
+  text-align:center;
+}
+
+.verify-box h3{
+  color:#0757a6;
+  font-size:25px;
+  margin-bottom:10px;
+}
+
+.verify-box p{
+  color:#667085;
+  margin-bottom:22px;
+}
+
+.verify-result{
+  display:none;
+  margin-top:20px;
+  padding:18px;
+  background:#ecfdf3;
+  border:1px solid #abefc6;
+  border-radius:12px;
+  text-align:left;
+}
+
+.verify-result strong{
+  color:#067647;
+}
+
+/* CONTACT */
+.contact-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+}
+
+.contact-card{
+  background:white;
+  padding:25px;
+  border-radius:17px;
+  text-align:center;
+  box-shadow:0 7px 25px rgba(0,0,0,.06);
+}
+
+.contact-card .icon{
+  font-size:32px;
+}
+
+.contact-card h3{
+  color:#0757a6;
+  margin:10px 0 5px;
+}
+
+/* FOOTER */
+footer{
+  background:#071d35;
+  color:white;
+  padding:45px 20px 25px;
+  text-align:center;
+}
+
+.footer-brand{
+  font-size:24px;
+  font-weight:900;
+  color:#ffd21c;
+}
+
+footer p{
+  color:#b8c6d9;
+  margin:10px auto;
+  max-width:650px;
+}
+
+.footer-links{
+  display:flex;
+  justify-content:center;
+  gap:18px;
+  flex-wrap:wrap;
+  margin:20px 0;
+}
+
+.footer-links a{
+  color:white;
+  font-size:14px;
+}
+
+.copyright{
+  border-top:1px solid rgba(255,255,255,.15);
+  margin-top:25px;
+  padding-top:20px;
+  font-size:12px;
+  color:#9fb0c5;
+}
+
+/* MOBILE */
+@media(max-width:800px){
+
+  .nav-links{
+    display:none;
+    position:absolute;
+    left:0;
+    right:0;
+    top:76px;
+    background:white;
+    padding:20px;
+    flex-direction:column;
+    box-shadow:0 10px 20px rgba(0,0,0,.1);
+  }
+
+  .nav-links.show{
+    display:flex;
+  }
+
+  .menu-btn{
+    display:block;
+  }
+
+  .mission-grid,
+  .news-grid,
+  .contact-grid{
+    grid-template-columns:1fr;
+  }
+
+  .value-list{
+    grid-template-columns:1fr;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .field.full{
+    grid-column:auto;
+  }
+
+  .hero{
+    min-height:82vh;
+  }
+
+  section{
+    padding:60px 16px;
+  }
+
+  .section-title h2{
+    font-size:30px;
+  }
+
+  .event{
+    align-items:flex-start;
+  }
+}
+
+@media(max-width:430px){
+  .brand-name{
+    font-size:17px;
+  }
+
+  .logo{
+    width:43px;
+    height:43px;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .form-box{
+    padding:22px;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header>
-  <div class="logo">
-    <span>BK</span>
-    BADLEGA KHAGARIA
-  </div>
+  <div class="navbar">
 
-  <nav>
-    <a href="#about">About</a>
-    <a href="#mission">Mission</a>
-    <a href="#join">Join Us</a>
-    <a href="#contact">Contact</a>
-  </nav>
+    <a href="#home" class="brand">
+      <div class="logo">BK</div>
+      <div class="brand-name">BADLEGA KHAGARIA</div>
+    </a>
+
+    <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#mission">Mission</a>
+      <a href="#news">News</a>
+      <a href="#events">Events</a>
+      <a href="#impact">Impact</a>
+      <a href="#join">Join Us</a>
+      <a href="#verify">Certificate</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+  </div>
 </header>
 
-<section class="hero">
-  <div>
-    <h1>BADLEGA KHAGARIA</h1>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-inner">
+
+    <div class="badge">A MOVEMENT FOR THE FUTURE</div>
+
+    <h1>BADLEGA<br>KHAGARIA</h1>
+
     <h2>A VOICE OF CHANGE • A MOVEMENT FOR THE FUTURE</h2>
+
     <p>
       Soch badlo, Khagaria badlega.
       Together, let's build a cleaner, safer, aware and better Khagaria.
     </p>
 
     <div class="buttons">
-      <a class="btn primary" href="#join">Join Our Team</a>
-      <a class="btn secondary" href="#mission">Our Mission</a>
+      <a href="#join" class="btn btn-yellow">Join Our Team</a>
+      <a href="#mission" class="btn btn-outline">Our Mission</a>
     </div>
+
   </div>
 </section>
 
-<section id="about" class="about">
-  <div class="title">
-    <h2>About Badlega Khagaria</h2>
-  </div>
 
-  <p>
-    Badlega Khagaria is a community-driven movement working towards
-    positive and meaningful change in Khagaria. We believe that change
-    begins with awareness, responsibility and collective action.
-  </p>
-</section>
-
+<!-- MISSION -->
 <section id="mission">
-  <div class="title">
-    <h2>Our Mission</h2>
+  <div class="container">
+
+    <div class="section-title">
+      <h2>Our Mission</h2>
+      <p>
+        Badlega Khagaria is a community-driven movement working
+        for positive and responsible change.
+      </p>
+    </div>
+
+    <div class="mission-grid">
+
+      <div class="card">
+        <div class="card-icon">🛡️</div>
+        <h3>Safety & Awareness</h3>
+        <p>
+          Promoting awareness around girls' and women's safety
+          and encouraging a safer community for everyone.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🌱</div>
+        <h3>Clean & Green Khagaria</h3>
+        <p>
+          Supporting cleanliness, environmental responsibility
+          and better public spaces.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📢</div>
+        <h3>Responsible Voice</h3>
+        <p>
+          Raising responsible voices against wrong practices
+          and issues affecting our community.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">📚</div>
+        <h3>Education & Awareness</h3>
+        <p>
+          Encouraging education, knowledge and social awareness
+          among young people and the wider community.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🤝</div>
+        <h3>Helping People</h3>
+        <p>
+          Supporting people in need and creating a culture
+          of compassion, cooperation and community service.
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">🚀</div>
+        <h3>Youth Development</h3>
+        <p>
+          Giving young people opportunities to participate,
+          contribute and create meaningful change.
+        </p>
+      </div>
+
+    </div>
   </div>
+</section>
 
-  <div class="cards">
 
-    <div class="card">
-      <h3>🛡️ Safety & Awareness</h3>
-      <p>
-        Promoting awareness and supporting a safer environment,
-        especially for girls and women.
-      </p>
+<!-- VALUES -->
+<section class="values">
+  <div class="container">
+
+    <div class="section-title">
+      <h2>What We Believe</h2>
+      <p>Small responsible actions can create meaningful change.</p>
     </div>
 
-    <div class="card">
-      <h3>🧹 Clean Khagaria</h3>
-      <p>
-        Encouraging cleanliness, civic responsibility and a healthier
-        community.
-      </p>
+    <div class="value-list">
+
+      <div class="value">
+        <strong>01 • Responsibility</strong>
+        <p>We take responsibility for our community and surroundings.</p>
+      </div>
+
+      <div class="value">
+        <strong>02 • Unity</strong>
+        <p>Positive change becomes stronger when people work together.</p>
+      </div>
+
+      <div class="value">
+        <strong>03 • Awareness</strong>
+        <p>Awareness is the first step towards meaningful action.</p>
+      </div>
+
+      <div class="value">
+        <strong>04 • Integrity</strong>
+        <p>We believe in honest, respectful and responsible work.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- NEWS -->
+<section id="news">
+  <div class="container">
+
+    <div class="section-title">
+      <h2>News & Updates</h2>
+      <p>Latest updates and activities of Badlega Khagaria.</p>
     </div>
 
-    <div class="card">
-      <h3>🌱 Environment</h3>
-      <p>
-        Spreading environmental responsibility and encouraging
-        sustainable community practices.
-      </p>
-    </div>
+    <div class="news-grid">
 
-    <div class="card">
-      <h3>📚 Education & Youth</h3>
-      <p>
-        Encouraging education, awareness, skills and meaningful
-        participation of young people.
-      </p>
-    </div>
+      <article class="news-card">
+        <div class="news-top">📰</div>
+        <div class="news-body">
+          <h3>Welcome to Badlega Khagaria</h3>
+          <p>
+            Our official platform is being built to connect
+            people who want to contribute to positive change.
+          </p>
+          <span class="date">Latest Update</span>
+        </div>
+      </article>
 
-    <div class="card">
-      <h3>🤝 Help & Service</h3>
-      <p>
-        Supporting people in need and encouraging a culture of
-        kindness and community service.
-      </p>
-    </div>
+      <article class="news-card">
+        <div class="news-top">🌱</div>
+        <div class="news-body">
+          <h3>Clean & Green Initiatives</h3>
+          <p>
+            Updates about cleanliness and environmental activities
+            will be published here.
+          </p>
+          <span class="date">Coming Soon</span>
+        </div>
+      </article>
 
-    <div class="card">
-      <h3>📢 Responsible Voice</h3>
-      <p>
-        Raising responsible voices against issues and practices that
-        negatively affect our community.
-      </p>
+      <article class="news-card">
+        <div class="news-top">🤝</div>
+        <div class="news-body">
+          <h3>Community Activities</h3>
+          <p>
+            Follow this section for upcoming community work,
+            awareness drives and volunteer activities.
+          </p>
+          <span class="date">Coming Soon</span>
+        </div>
+      </article>
+
     </div>
 
   </div>
 </section>
 
-<section class="join" id="join">
-  <div class="title">
-    <h2>Be A Part Of The Change</h2>
+
+<!-- EVENTS -->
+<section class="events" id="events">
+  <div class="container">
+
+    <div class="section-title">
+      <h2>Events</h2>
+      <p>Upcoming activities and community initiatives.</p>
+    </div>
+
+    <div class="event">
+      <div class="event-date">
+        <div>EVENT</div>
+        <div>01</div>
+      </div>
+
+      <div>
+        <h3>Community Awareness Drive</h3>
+        <p>
+          Details of upcoming awareness activities will be
+          published here.
+        </p>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-date">
+        <div>EVENT</div>
+        <div>02</div>
+      </div>
+
+      <div>
+        <h3>Cleanliness Initiative</h3>
+        <p>
+          Details and registration information will be added
+          when the event is announced.
+        </p>
+      </div>
+    </div>
+
   </div>
+</section>
+
+
+<!-- IMPACT -->
+<section class="impact" id="impact">
+  <div class="container">
+
+    <div class="section-title">
+      <h2>Our Impact</h2>
+      <p>
+        Real numbers will be updated here as our work grows.
+      </p>
+    </div>
+
+    <div class="stats">
+
+      <div class="stat">
+        <h3>0</h3>
+        <p>Volunteers</p>
+      </div>
+
+      <div class="stat">
+        <h3>0</h3>
+        <p>Initiatives</p>
+      </div>
+
+      <div class="stat">
+        <h3>0</h3>
+        <p>People Reached</p>
+      </div>
+
+      <div class="stat">
+        <h3>0</h3>
+        <p>Certificates</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- JOIN -->
+<section id="join">
+  <div class="container">
+
+    <div class="section-title">
+      <h2>Join Our Team</h2>
+      <p>
+        Become a part of the movement and contribute to
+        positive change in Khagaria.
+      </p>
+    </div>
+
+    <div class="form-box">
+
+      <form onsubmit="submitVolunteer(event)">
+
+        <div class="form-grid">
+
+          <div class="field">
+            <label>Full Name *</label>
+            <input type="text" id="fullName" required>
+          </div>
+
+          <div class="field">
+            <label>Instagram Username *</label>
+            <input type="text" id="instagram" placeholder="@username" required>
+          </div>
+
+          <div class="field">
+            <label>Email (Optional)</label>
+            <input type="email" id="email">
+          </div>
+
+          <div class="field">
+            <label>Village / City *</label>
+            <input type="text" id="location" required>
+          </div>
+
+          <div class="field">
+            <label>Education / Occupation *</label>
+            <input type="text" id="occupation" required>
+          </div>
+
+          <div class="field">
+            <label>Area of Interest *</label>
+            <select id="interest" required>
+              <option value="">Select</option>
+              <option>Women & Girls Safety</option>
+              <option>Cleanliness</option>
+              <option>Environment</option>
+              <option>Education</option>
+              <option>Youth Development</option>
+              <option>Community Service</option>
+              <option>Awareness</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label>Why do you want to join Badlega Khagaria? *</label>
+            <textarea id="whyJoin" required></textarea>
+          </div>
+
+          <div class="field full">
+            <label>Your Skills</label>
+            <textarea id="skills" placeholder="Example: Social media, designing, organizing events..."></textarea>
+          </div>
+
+          <div class="field full">
+            <label>Previous Social / Community Work</label>
+            <textarea id="previousWork"></textarea>
+          </div>
+
+          <div class="field full">
+            <label>What positive change do you want in Khagaria? *</label>
+            <textarea id="change" required></textarea>
+          </div>
+
+          <div class="field">
+            <label>Preferred Contact *</label>
+            <select id="contactMethod" required>
+              <option value="">Select</option>
+              <option>Instagram</option>
+              <option>Email</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="checkbox">
+          <input type="checkbox" id="consent" required>
+          <label for="consent">
+            I agree to follow the values, guidelines and responsible
+            conduct of Badlega Khagaria.
+          </label>
+        </div>
+
+        <button class="btn btn-blue" type="submit">
+          Submit Application
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- CERTIFICATE -->
+<section class="verify" id="verify">
+
+  <div class="container">
+
+    <div class="section-title">
+      <h2>Certificate Verification</h2>
+      <p>
+        Verify an official Badlega Khagaria volunteer certificate
+        using its certificate ID.
+      </p>
+    </div>
+
+    <div class="verify-box">
+
+      <h3>Verify Certificate</h3>
+
+      <p>
+        Enter the Certificate ID printed on the certificate.
+      </p>
+
+      <input
+        type="text"
+        id="certificateId"
+        placeholder="Example: BK-CERT-0001"
+      >
+
+      <br><br>
+
+      <button class="btn btn-blue" onclick="verifyCertificate()">
+        Verify Certificate
+      </button>
+
+      <div class="verify-result" id="verifyResult">
+        <strong>✓ Certificate Record Found</strong>
+        <p id="certificateText"></p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- CONTACT -->
+<section id="contact">
+
+  <div class="container">
+
+    <div class="section-title">
+      <h2>Contact Us</h2>
+      <p>Connect with Badlega Khagaria.</p>
+    </div>
+
+    <div class="contact-grid">
+
+      <div class="contact-card">
+        <div class="icon">📧</div>
+        <h3>Email</h3>
+        <p>badlegakhagaria@gmail.com</p>
+      </div>
+
+      <div class="contact-card">
+        <div class="icon">💬</div>
+        <h3>WhatsApp</h3>
+        <p>+91 80519 45654</p>
+      </div>
+
+      <div class="contact-card">
+        <div class="icon">📱</div>
+        <h3>Instagram</h3>
+        <p>@badlega__khagaria</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+
+  <div class="footer-brand">BADLEGA KHAGARIA</div>
 
   <p>
-    Khagaria ko better banane ke liye aap bhi apna contribution de sakte hain.
+    A VOICE OF CHANGE • A MOVEMENT FOR THE FUTURE
   </p>
 
-  <div class="buttons">
-    <a class="btn primary" href="mailto:badlegakhagaria@gmail.com">
-      Join Our Team
-    </a>
-  </div>
-</section>
-
-<section id="contact">
-  <div class="title">
-    <h2>Contact Us</h2>
+  <div class="footer-links">
+    <a href="#home">Home</a>
+    <a href="#mission">Mission</a>
+    <a href="#news">News</a>
+    <a href="#events">Events</a>
+    <a href="#join">Join Us</a>
+    <a href="#verify">Certificate</a>
+    <a href="#contact">Contact</a>
   </div>
 
-  <div class="cards">
-
-    <div class="card">
-      <h3>📧 Email</h3>
-      <p>badlegakhagaria@gmail.com</p>
-    </div>
-
-    <div class="card">
-      <h3>💬 WhatsApp</h3>
-      <p>+91 80519 45654</p>
-    </div>
-
-    <div class="card">
-      <h3>📱 Instagram</h3>
-      <p>@badlega__khagaria</p>
-    </div>
-
-  </div>
-</section>
-
-<footer>
-  <p><b>BADLEGA KHAGARIA</b></p>
-  <p>A VOICE OF CHANGE • A MOVEMENT FOR THE FUTURE</p>
-  <p>© 2026 Badlega Khagaria Organization</p>
-</footer>
-
-</body>
-</html>
+  <div class="copyright">
+    © 2026 Badlega Khagaria Organization. All rights reserved.
