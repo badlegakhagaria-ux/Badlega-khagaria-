@@ -391,6 +391,1166 @@ th{background:#eef4f9}
 const SUPABASE_URL = "https://lvlbjryjkasodfsobus.supabase.co";
 
 /*
- IMPORTANT:
- Paste the SAME PUBLISHABLE KEY that is already
-  const SUPABASE_KEY = "sb_publishable_T_5P6RHg6d7hksLVkCi_qA_3uplsD0B";
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Badlega Khagaria — Admin Panel</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  background:#f4f7fb;
+  color:#102a43;
+}
+
+header{
+  background:#07518b;
+  color:white;
+  padding:18px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+
+header h1{margin:0;font-size:22px}
+header small{display:block;margin-top:4px;opacity:.85}
+
+button{
+  border:0;
+  border-radius:8px;
+  padding:10px 15px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.btn-blue{background:#07518b;color:white}
+.btn-yellow{background:#e7b900;color:#111}
+.btn-red{background:#d64545;color:white}
+.btn-green{background:#168a52;color:white}
+
+.container{
+  max-width:1200px;
+  margin:auto;
+  padding:20px;
+}
+
+.card{
+  background:white;
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:20px;
+  box-shadow:0 3px 15px rgba(0,0,0,.07);
+}
+
+.login{
+  max-width:420px;
+  margin:70px auto;
+}
+
+h2{margin-top:0}
+
+input,textarea,select{
+  width:100%;
+  padding:12px;
+  border:1px solid #ccd6e0;
+  border-radius:8px;
+  margin:7px 0 14px;
+  font-size:15px;
+}
+
+textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+label{
+  font-weight:700;
+}
+
+.hidden{display:none!important}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin-bottom:20px;
+}
+
+.tab{
+  background:white;
+  border:1px solid #d5dee8;
+  color:#07518b;
+  white-space:nowrap;
+}
+
+.tab.active{
+  background:#07518b;
+  color:white;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:850px;
+}
+
+th,td{
+  border-bottom:1px solid #e4e9ef;
+  padding:11px;
+  text-align:left;
+  vertical-align:top;
+}
+
+th{background:#eef4f9}
+
+.table-wrap{
+  overflow-x:auto;
+}
+
+.status{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.status.pending{background:#fff1bd}
+.status.approved,.status.active,.status.published{background:#ccefdc}
+.status.rejected,.status.revoked,.status.draft{background:#ffd7d7}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:15px;
+}
+
+.stat{
+  background:white;
+  padding:20px;
+  border-radius:12px;
+  border-left:5px solid #07518b;
+}
+
+.stat b{
+  font-size:28px;
+  display:block;
+  margin-top:7px;
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+
+.notice{
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:15px;
+}
+
+.error{background:#ffe4e4;color:#8b2020}
+.success{background:#dff7e7;color:#146b3a}
+
+@media(max-width:600px){
+  .container{padding:12px}
+  header{padding:15px}
+  header h1{font-size:18px}
+  .login{margin:30px auto}
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="container">
+  <div class="card login">
+    <h2>BADLEGA KHAGARIA</h2>
+    <h3>Private Admin Panel</h3>
+
+    <p>Only authorized organization administrators can access this area.</p>
+
+    <label>Email</label>
+    <input id="loginEmail" type="email" placeholder="Admin email">
+
+    <label>Password</label>
+    <input id="loginPassword" type="password" placeholder="Password">
+
+    <button class="btn-blue" style="width:100%" onclick="login()">
+      LOGIN
+    </button>
+
+    <div id="loginMsg" style="margin-top:15px"></div>
+  </div>
+</div>
+
+
+<!-- ADMIN APP -->
+<div id="adminApp" class="hidden">
+
+<header>
+  <div>
+    <h1>BADLEGA KHAGARIA — ADMIN</h1>
+    <small>Organization Management Dashboard</small>
+  </div>
+
+  <button class="btn-red" onclick="logout()">Logout</button>
+</header>
+
+<div class="container">
+
+<div id="globalMsg"></div>
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="page">
+
+  <div class="grid">
+
+    <div class="stat">
+      <span>Total Volunteers</span>
+      <b id="statVolunteers">0</b>
+    </div>
+
+    <div class="stat">
+      <span>Pending Applications</span>
+      <b id="statPending">0</b>
+    </div>
+
+    <div class="stat">
+      <span>Certificates</span>
+      <b id="statCertificates">0</b>
+    </div>
+
+    <div class="stat">
+      <span>Contact Messages</span>
+      <b id="statMessages">0</b>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- TABS -->
+<div class="tabs">
+
+<button class="tab active" onclick="showPage('dashboard',this)">
+Dashboard
+</button>
+
+<button class="tab" onclick="showPage('volunteers',this);loadVolunteers()">
+Volunteers
+</button>
+
+<button class="tab" onclick="showPage('certificates',this);loadCertificates()">
+Certificates
+</button>
+
+<button class="tab" onclick="showPage('news',this);loadNews()">
+News
+</button>
+
+<button class="tab" onclick="showPage('events',this);loadEvents()">
+Events
+</button>
+
+<button class="tab" onclick="showPage('achievements',this);loadAchievements()">
+Achievements
+</button>
+
+<button class="tab" onclick="showPage('messages',this);loadMessages()">
+Messages
+</button>
+
+</div>
+
+
+<!-- VOLUNTEERS -->
+<section id="volunteers" class="page hidden">
+
+<div class="card">
+<h2>Volunteer Applications</h2>
+<p>Review applications and manage volunteer status.</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Volunteer ID</th>
+<th>Name</th>
+<th>Instagram</th>
+<th>City/Village</th>
+<th>Interest</th>
+<th>Status</th>
+<th>Applied</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="volunteerRows"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+
+<!-- CERTIFICATES -->
+<section id="certificates" class="page hidden">
+
+<div class="card">
+<h2>Certificates</h2>
+<p>Generate certificates for approved volunteers.</p>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>Certificate ID</th>
+<th>Volunteer ID</th>
+<th>Name</th>
+<th>Issue Date</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="certificateRows"></tbody>
+</table>
+</div>
+</div>
+
+</section>
+
+
+<!-- NEWS -->
+<section id="news" class="page hidden">
+
+<div class="card">
+
+<h2>News & Updates</h2>
+
+<label>Title</label>
+<input id="newsTitle" placeholder="News title">
+
+<label>Details</label>
+<textarea id="newsContent" placeholder="News / update details"></textarea>
+
+<label>Status</label>
+<select id="newsStatus">
+<option value="published">Published</option>
+<option value="draft">Draft</option>
+</select>
+
+<button class="btn-blue" onclick="addNews()">ADD NEWS</button>
+
+</div>
+
+<div class="card table-wrap">
+
+<table>
+<thead>
+<tr>
+<th>Title</th>
+<th>Content</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="newsRows"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- EVENTS -->
+<section id="events" class="page hidden">
+
+<div class="card">
+
+<h2>Events</h2>
+
+<label>Event Title</label>
+<input id="eventTitle" placeholder="Event title">
+
+<label>Event Date</label>
+<input id="eventDate" type="date">
+
+<label>Location</label>
+<input id="eventLocation" placeholder="Location">
+
+<label>Description</label>
+<textarea id="eventDescription" placeholder="Event details"></textarea>
+
+<label>Status</label>
+<select id="eventStatus">
+<option value="published">Published</option>
+<option value="draft">Draft</option>
+</select>
+
+<button class="btn-blue" onclick="addEvent()">ADD EVENT</button>
+
+</div>
+
+<div class="card table-wrap">
+
+<table>
+<thead>
+<tr>
+<th>Title</th>
+<th>Date</th>
+<th>Location</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="eventRows"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements" class="page hidden">
+
+<div class="card">
+
+<h2>Achievements / Impact</h2>
+
+<label>Achievement Title</label>
+<input id="achievementTitle" placeholder="Achievement title">
+
+<label>Description</label>
+<textarea id="achievementDescription" placeholder="Achievement details"></textarea>
+
+<button class="btn-blue" onclick="addAchievement()">
+ADD ACHIEVEMENT
+</button>
+
+</div>
+
+<div class="card table-wrap">
+
+<table>
+<thead>
+<tr>
+<th>Title</th>
+<th>Description</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="achievementRows"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- MESSAGES -->
+<section id="messages" class="page hidden">
+
+<div class="card">
+
+<h2>Contact Messages</h2>
+
+<div class="table-wrap">
+
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Name</th>
+<th>Email</th>
+<th>Message</th>
+</tr>
+</thead>
+
+<tbody id="messageRows"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</section>
+
+</div>
+</div>
+
+
+<!-- CERTIFICATE PRINT AREA -->
+<div id="certificatePrint" class="hidden"></div>
+
+
+<script>
+
+/* =====================================================
+   SUPABASE CONNECTION
+   ===================================================== */
+
+const SUPABASE_URL =
+"https://lvlbjryjkasodfsobus.supabase.co";
+
+/*
+   IMPORTANT:
+   Replace ONLY the value below with your existing
+   Supabase PUBLISHABLE key.
+
+   It starts with:
+   sb_publishable_
+*/
+
+const SUPABASE_KEY =
+"YOUR_SUPABASE_PUBLISHABLE_KEY";
+
+
+const supabaseClient =
+supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+
+/* =====================================================
+   HELPERS
+   ===================================================== */
+
+function msg(text,type="success"){
+
+  const box=document.getElementById("globalMsg");
+
+  box.innerHTML=
+  `<div class="notice ${type}">
+    ${escapeHtml(text)}
+  </div>`;
+
+  setTimeout(()=>{
+    box.innerHTML="";
+  },4000);
+}
+
+
+function escapeHtml(value){
+
+  if(value===null || value===undefined) return "";
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+function formatDate(value){
+
+  if(!value) return "-";
+
+  return new Date(value).toLocaleDateString("en-IN");
+}
+
+
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+async function login(){
+
+  const email =
+    document.getElementById("loginEmail").value.trim();
+
+  const password =
+    document.getElementById("loginPassword").value;
+
+  const loginMsg =
+    document.getElementById("loginMsg");
+
+  loginMsg.innerHTML="Checking...";
+
+  if(!email || !password){
+
+    loginMsg.innerHTML=
+    '<div class="notice error">Email aur password enter karein.</div>';
+
+    return;
+  }
+
+  const {data,error} =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  if(error){
+
+    console.error(error);
+
+    loginMsg.innerHTML=
+    '<div class="notice error">Login nahi ho paya. Email/password check karein.</div>';
+
+    return;
+  }
+
+  if(!data.user){
+
+    loginMsg.innerHTML=
+    '<div class="notice error">Login session nahi mila.</div>';
+
+    return;
+  }
+
+  /* Check admin authorization */
+
+  const {data:admin,error:adminError} =
+    await supabaseClient
+      .from("admin_users")
+      .select("user_id")
+      .eq("user_id",data.user.id)
+      .maybeSingle();
+
+  if(adminError || !admin){
+
+    await supabaseClient.auth.signOut();
+
+    loginMsg.innerHTML=
+    '<div class="notice error">Ye account authorized admin nahi hai.</div>';
+
+    return;
+  }
+
+  document.getElementById("loginPage")
+    .classList.add("hidden");
+
+  document.getElementById("adminApp")
+    .classList.remove("hidden");
+
+  await loadDashboard();
+
+}
+
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  location.reload();
+
+}
+
+
+/* =====================================================
+   SESSION CHECK
+   ===================================================== */
+
+async function checkSession(){
+
+  const {data} =
+    await supabaseClient.auth.getSession();
+
+  if(data.session){
+
+    const {data:admin} =
+      await supabaseClient
+        .from("admin_users")
+        .select("user_id")
+        .eq("user_id",data.session.user.id)
+        .maybeSingle();
+
+    if(admin){
+
+      document.getElementById("loginPage")
+        .classList.add("hidden");
+
+      document.getElementById("adminApp")
+        .classList.remove("hidden");
+
+      await loadDashboard();
+
+    }
+  }
+
+}
+
+
+/* =====================================================
+   PAGE NAVIGATION
+   ===================================================== */
+
+function showPage(id,button){
+
+  document.querySelectorAll(".page")
+    .forEach(page=>{
+      page.classList.add("hidden");
+    });
+
+  document.getElementById(id)
+    .classList.remove("hidden");
+
+  document.querySelectorAll(".tab")
+    .forEach(tab=>{
+      tab.classList.remove("active");
+    });
+
+  if(button){
+    button.classList.add("active");
+  }
+
+}
+
+
+/* =====================================================
+   DASHBOARD
+   ===================================================== */
+
+async function loadDashboard(){
+
+  const [
+    volunteers,
+    pending,
+    certificates,
+    messages
+  ] = await Promise.all([
+
+    supabaseClient
+      .from("volunteers")
+      .select("*",{count:"exact",head:true}),
+
+    supabaseClient
+      .from("volunteers")
+      .select("*",{count:"exact",head:true})
+      .eq("status","pending"),
+
+    supabaseClient
+      .from("certificates")
+      .select("*",{count:"exact",head:true}),
+
+    supabaseClient
+      .from("contact_messages")
+      .select("*",{count:"exact",head:true})
+
+  ]);
+
+  document.getElementById("statVolunteers").textContent =
+    volunteers.count || 0;
+
+  document.getElementById("statPending").textContent =
+    pending.count || 0;
+
+  document.getElementById("statCertificates").textContent =
+    certificates.count || 0;
+
+  document.getElementById("statMessages").textContent =
+    messages.count || 0;
+
+}
+
+
+/* =====================================================
+   VOLUNTEERS
+   ===================================================== */
+
+async function loadVolunteers(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("volunteers")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    msg("Volunteers load nahi ho paaye.","error");
+
+    return;
+  }
+
+  const rows =
+    document.getElementById("volunteerRows");
+
+  rows.innerHTML="";
+
+  if(!data || data.length===0){
+
+    rows.innerHTML=
+    '<tr><td colspan="8">No volunteer applications yet.</td></tr>';
+
+    return;
+  }
+
+  data.forEach(v=>{
+
+    rows.innerHTML += `
+    <tr>
+
+      <td>${escapeHtml(v.volunteer_id)}</td>
+
+      <td>
+        <b>${escapeHtml(v.full_name)}</b>
+      </td>
+
+      <td>
+        ${escapeHtml(v.instagram_username || "-")}
+      </td>
+
+      <td>
+        ${escapeHtml(v.village_city || "-")}
+      </td>
+
+      <td>
+        ${escapeHtml(v.area_of_interest || "-")}
+      </td>
+
+      <td>
+        <span class="status ${escapeHtml(v.status || "pending")}">
+          ${escapeHtml(v.status || "pending")}
+        </span>
+      </td>
+
+      <td>
+        ${formatDate(v.created_at)}
+      </td>
+
+      <td>
+        <div class="actions">
+
+          <button
+            class="btn-green"
+            onclick="updateVolunteerStatus('${v.id}','approved')">
+            Approve
+          </button>
+
+          <button
+            class="btn-red"
+            onclick="updateVolunteerStatus('${v.id}','rejected')">
+            Reject
+          </button>
+
+          <button
+            class="btn-yellow"
+            onclick="updateVolunteerStatus('${v.id}','revoked')">
+            Revoke
+          </button>
+
+        </div>
+      </td>
+
+    </tr>`;
+  });
+
+}
+
+
+async function updateVolunteerStatus(id,status){
+
+  const {error} =
+    await supabaseClient
+      .from("volunteers")
+      .update({status})
+      .eq("id",id);
+
+  if(error){
+
+    console.error(error);
+
+    msg("Status update nahi hua.","error");
+
+    return;
+  }
+
+  msg("Volunteer status updated.");
+
+  await loadVolunteers();
+  await loadDashboard();
+
+}
+
+
+/* =====================================================
+   CERTIFICATES
+   ===================================================== */
+
+async function loadCertificates(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("certificates")
+      .select("*")
+      .order("issue_date",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    msg("Certificates load nahi ho paaye.","error");
+
+    return;
+  }
+
+  const rows =
+    document.getElementById("certificateRows");
+
+  rows.innerHTML="";
+
+  if(!data || data.length===0){
+
+    rows.innerHTML=
+    '<tr><td colspan="6">No certificates yet.</td></tr>';
+
+    return;
+  }
+
+  data.forEach(c=>{
+
+    rows.innerHTML += `
+    <tr>
+
+      <td>${escapeHtml(c.certificate_id)}</td>
+
+      <td>${escapeHtml(c.volunteer_id)}</td>
+
+      <td>${escapeHtml(c.volunteer_name)}</td>
+
+      <td>${formatDate(c.issue_date)}</td>
+
+      <td>
+        <span class="status ${escapeHtml(c.status || "active")}">
+          ${escapeHtml(c.status || "active")}
+        </span>
+      </td>
+
+      <td>
+
+        <div class="actions">
+
+          <button
+            class="btn-blue"
+            onclick="printCertificate(
+              '${c.certificate_id}',
+              '${escapeHtml(c.volunteer_id)}',
+              '${escapeHtml(c.volunteer_name)}',
+              '${c.issue_date}'
+            )">
+            Print
+          </button>
+
+          <button
+            class="btn-red"
+            onclick="revokeCertificate('${c.certificate_id}')">
+            Revoke
+          </button>
+
+        </div>
+
+      </td>
+
+    </tr>`;
+  });
+
+}
+
+
+async function createCertificate(volunteer){
+
+  const today =
+    new Date().toISOString().split("T")[0];
+
+  const {data,error} =
+    await supabaseClient
+      .from("certificates")
+      .insert([{
+        volunteer_id:volunteer.volunteer_id,
+        volunteer_name:volunteer.full_name,
+        issue_date:today,
+        status:"active"
+      }])
+      .select()
+      .single();
+
+  if(error){
+
+    console.error(error);
+
+    msg("Certificate create nahi hua.","error");
+
+    return;
+  }
+
+  msg("Certificate create ho gaya.");
+
+  await loadCertificates();
+  await loadDashboard();
+
+  return data;
+}
+
+
+async function revokeCertificate(certificateId){
+
+  const {error} =
+    await supabaseClient
+      .from("certificates")
+      .update({status:"revoked"})
+      .eq("certificate_id",certificateId);
+
+  if(error){
+
+    console.error(error);
+
+    msg("Certificate revoke nahi hua.","error");
+
+    return;
+  }
+
+  msg("Certificate revoked.");
+
+  await loadCertificates();
+
+}
+
+
+/* =====================================================
+   NEWS
+   ===================================================== */
+
+async function loadNews(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("news")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+  if(error){
+
+    console.error(error);
+
+    msg("News load nahi hua.","error");
+
+    return;
+  }
+
+  const rows =
+    document.getElementById("newsRows");
+
+  rows.innerHTML="";
+
+  if(!data || data.length===0){
+
+    rows.innerHTML=
+    '<tr><td colspan="4">No news yet.</td></tr>';
+
+    return;
+  }
+
+  data.forEach(n=>{
+
+    rows.innerHTML += `
+    <tr>
+
+      <td>${escapeHtml(n.title)}</td>
+
+      <td>${escapeHtml(n.content)}</td>
+
+      <td>
+        <span class="status ${escapeHtml(n.status)}">
+          ${escapeHtml(n.status)}
+        </span>
+      </td>
+
+      <td>
+        <button
+          class="btn-red"
+          onclick="deleteNews('${n.id}')">
+          Delete
+        </button>
+      </td>
+
+    </tr>`;
+  });
+
+}
+
+
+async function addNews(){
+
+  const title =
+    document.getElementById("newsTitle").value.trim();
+
+  const content =
+    document.getElementById("newsContent").value.trim();
+
+  const status =
+    document.getElementById("newsStatus").value;
+
+  if(!title || !content){
+
+    msg("Title aur details bharna zaroori hai.","error");
+
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("news")
+      .insert([{
+        title,
+        content,
+        status
+      }]);
+
+  if(error){
+
+    console.error(error);
+
+    msg("News add nahi hua.","error");
+
+    return;
+  }
+
+  document.getElementById("newsTitle").value="";
+  document.getElementById("newsContent").value="";
+
+  msg("News added.");
+
+  await loadNews();
+
+}
+
+
+async function deleteNews(id){
+
+  const {error} =
+    await supabaseClient
+      .from("news")
+      .delete()
+      .eq("id",id);
+
+  if(error){
+
+    console.erro
