@@ -862,6 +862,51 @@ function verifyCertificate(){
 }
 
 </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+const SUPABASE_URL = "https://lvlbjryjkasodsfosbus.supabase.co/rest/v1/";
+const SUPABASE_KEY = "sb_publishable_T_5P6RHg6d7hksLVkCi_qA_3uplsD0B";
+
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const form = document.getElementById("volunteerForm");
+
+if (form) {
+  form.addEventListener("submit", async function(e) {
+    e.preventDefault();
+
+    const f = new FormData(form);
+
+    const { error } = await supabaseClient
+      .from("volunteers")
+      .insert([{
+        full_name: f.get("fullName") || "",
+        instagram: f.get("instagram") || "",
+        email: f.get("email") || null,
+        village_city: f.get("villageCity") || "",
+        education_occupation: f.get("educationOccupation") || "",
+        interest: f.get("interest") || "",
+        why_join: f.get("whyJoin") || "",
+        skills: f.get("skills") || "",
+        prior_work: f.get("priorWork") || "",
+        positive_change: f.get("positiveChange") || "",
+        preferred_contact: f.get("preferredContact") || "Instagram",
+        consent: true
+      }]);
+
+    if (error) {
+      alert("Application submit nahi ho paya. Please try again.");
+      return;
+    }
+
+    alert("Application successfully submit ho gaya! 🙏");
+    form.reset();
+  });
+}
+</script>
 </body>
 </html>
