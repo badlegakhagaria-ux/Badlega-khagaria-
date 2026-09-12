@@ -833,17 +833,6 @@ function closeMenu(){
 }
 
 
-/* Volunteer form - database will be connected next */
-document.getElementById("volunteerForm").addEventListener("submit",function(e){
-
-  e.preventDefault();
-
-  alert(
-    "Thank you for your interest in Badlega Khagaria!\\n\\n" +
-    "Your application form is ready. Secure database submission will be connected next."
-  );
-
-});
 
 
 /* Certificate verification demo */
@@ -863,9 +852,8 @@ function verifyCertificate(){
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-const SUPABASE_URL = "https://lvlbjryjkasodsfosbus.supabase.co/rest/v1/";
+const SUPABASE_URL = "https://lvlbjryjkasodfsobus.supabase.co";
 const SUPABASE_KEY = "sb_publishable_T_5P6RHg6d7hksLVkCi_qA_3uplsD0B";
 
 const supabaseClient = window.supabase.createClient(
@@ -900,6 +888,7 @@ if (form) {
 
     if (error) {
       alert("Application submit nahi ho paya. Please try again.");
+      console.error(error);
       return;
     }
 
@@ -908,5 +897,6 @@ if (form) {
   });
 }
 </script>
+
 </body>
 </html>
