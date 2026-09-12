@@ -4835,7 +4835,234 @@ document.addEventListener(
 );
 
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
 
+  const loginForm = document.querySelector("#loginScreen form");
 
+  if (!loginForm) {
+    console.error("Login form not found");
+    return;
+  }
+
+  loginForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const emailInput = loginForm.querySelector('input[type="email"]');
+    const passwordInput = loginForm.querySelector('input[type="password"]');
+
+    if (!emailInput || !passwordInput) {
+      alert("Login fields nahi mile.");
+      return;
+    }
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+      alert("Email aur password dono bhariye.");
+      return;
+    }
+
+    const button = loginForm.querySelector('button[type="submit"]');
+
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Logging in...";
+    }
+
+    try {
+
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+      if (error) {
+        console.error("Login error:", error);
+        alert("Login failed: " + error.message);
+
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Login to Admin Panel";
+        }
+
+        return;
+      }
+
+      if (!data || !data.user) {
+        alert("Login nahi ho paya. Please try again.");
+
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Login to Admin Panel";
+        }
+        </script>
+</body>
+</html>
+
+        return;
+      }
+
+      const { data: isAdmin, error: adminError } =
+        await supabaseClient.rpc("is_admin");
+
+      if (adminError) {
+        console.error("Admin check error:", adminError);
+        alert("Admin verification failed.");
+
+        await supabaseClient.auth.signOut();
+
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Login to Admin Panel";
+        }
+
+        return;
+      }
+
+      if (!isAdmin) {
+        alert("Ye account Admin nahi hai.");
+        await supabaseClient.auth.signOut();
+
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Login to Admin Panel";
+        }
+
+        return;
+      }
+
+      window.location.reload();
+
+    } catch (error) {
+
+      console.error("Unexpected login error:", error);
+      alert("Login ke waqt error aa gaya.");
+
+      if (button) {
+        button.disabled = false;
+        button.textContent = "Login to Admin Panel";
+      }
+    }
+
+  });
+
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const loginForm = document.querySelector("#loginScreen form");
+
+  if (!loginForm) {
+    console.error("Login form not found");
+    return;
+  }
+
+  loginForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const emailInput = loginForm.querySelector('input[type="email"]');
+    const passwordInput = loginForm.querySelector('input[type="password"]');
+
+    if (!emailInput || !passwordInput) {
+      alert("Login fields nahi mile.");
+      return;
+    }
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+      alert("Email aur password dono bhariye.");
+      return;
+    }
+
+    const button = loginForm.querySelector('button[type="submit"]');
+
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Logging in...";
+    }
+
+    try {
+
+      const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+      if (error) {
+        console.error("Login error:", error);
+        alert("Login failed: " + error.message);
+
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Login to Admin Panel";
+        }
+
+        return;
+      }
+
+      if (!data || !data.user) {
+        alert("Login nahi ho paya. Please try again.");
+
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Login to Admin Panel";
+        }
+
+        return;
+      }
+
+      const { data: isAdmin, error: adminError } =
+        await supabaseClient.rpc("is_admin");
+
+      if (adminError) {
+        console.error("Admin check error:", adminError);
+        alert("Admin verification failed.");
+
+        await supabaseClient.auth.signOut();
+
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Login to Admin Panel";
+        }
+
+        return;
+      }
+
+      if (!isAdmin) {
+        alert("Ye account Admin nahi hai.");
+        await supabaseClient.auth.signOut();
+
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Login to Admin Panel";
+        }
+
+        return;
+      }
+
+      window.location.reload();
+
+    } catch (error) {
+
+      console.error("Unexpected login error:", error);
+      alert("Login ke waqt error aa gaya.");
+
+      if (button) {
+        button.disabled = false;
+        button.textContent = "Login to Admin Panel";
+      }
+    }
+
+  });
+
+});
+</script>
 </body>
         </html>
