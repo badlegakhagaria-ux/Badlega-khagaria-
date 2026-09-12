@@ -1,691 +1,3340 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Badlega Khagaria — Admin Panel</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <title>Badlega Khagaria — Admin Panel</title>
 
-<style>
-*{box-sizing:border-box}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
-body{
-  margin:0;
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f4f7fb;
-  color:#102a43;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-header{
-  background:#07518b;
-  color:white;
-  padding:18px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f7fb;
+      color: #172033;
+    }
 
-header h1{margin:0;font-size:22px}
-header small{display:block;margin-top:4px;opacity:.85}
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
 
-button{
-  border:0;
-  border-radius:8px;
-  padding:10px 15px;
-  cursor:pointer;
-  font-weight:700;
-}
+    button {
+      cursor: pointer;
+    }
 
-.btn-blue{background:#07518b;color:white}
-.btn-yellow{background:#e7b900;color:#111}
-.btn-red{background:#d64545;color:white}
-.btn-green{background:#168a52;color:white}
-.btn-gray{background:#68737d;color:white}
+    .hidden {
+      display: none !important;
+    }
 
-.container{
-  max-width:1200px;
-  margin:auto;
-  padding:20px;
-}
+    /* LOGIN */
 
-.card{
-  background:white;
-  border-radius:14px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 3px 15px rgba(0,0,0,.07);
-}
+    #loginScreen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background:
+        radial-gradient(circle at top right, #fff4bd 0, transparent 35%),
+        linear-gradient(135deg, #eef6ff, #ffffff);
+    }
 
-.login{
-  max-width:430px;
-  margin:70px auto;
-}
+    .login-card {
+      width: 100%;
+      max-width: 430px;
+      background: white;
+      border-radius: 22px;
+      padding: 34px;
+      box-shadow: 0 20px 60px rgba(21, 52, 89, 0.14);
+      border: 1px solid #e7edf5;
+    }
 
-h2{margin-top:0}
+    .brand {
+      text-align: center;
+      margin-bottom: 28px;
+    }
 
-label{
-  display:block;
-  font-weight:700;
-  margin-top:14px;
-  margin-bottom:6px;
-}
+    .brand-logo {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      object-fit: contain;
+      margin-bottom: 12px;
+    }
 
-input,textarea,select{
-  width:100%;
-  padding:12px;
-  border:1px solid #ccd6e0;
-  border-radius:8px;
-  font-size:15px;
-}
+    .brand h1 {
+      font-size: 25px;
+      color: #0755a5;
+      letter-spacing: 0.5px;
+    }
 
-textarea{
-  min-height:110px;
-  resize:vertical;
-}
+    .brand p {
+      margin-top: 6px;
+      color: #667085;
+      font-size: 13px;
+    }
 
-.hidden{display:none!important}
+    .form-group {
+      margin-bottom: 17px;
+    }
 
-.tabs{
-  display:flex;
-  gap:8px;
-  overflow-x:auto;
-  margin-bottom:20px;
-}
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 7px;
+      color: #344054;
+    }
 
-.tab{
-  background:white;
-  border:1px solid #d5dee8;
-  color:#07518b;
-  white-space:nowrap;
-}
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #d0d5dd;
+      border-radius: 11px;
+      padding: 12px 13px;
+      outline: none;
+      background: #fff;
+      color: #172033;
+    }
 
-.tab.active{
-  background:#07518b;
-  color:white;
-}
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #1677d2;
+      box-shadow: 0 0 0 3px rgba(22, 119, 210, 0.10);
+    }
 
-.page{display:block}
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
 
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:15px;
-}
+    .primary-btn {
+      width: 100%;
+      border: none;
+      border-radius: 11px;
+      padding: 13px;
+      background: #0755a5;
+      color: white;
+      font-weight: 700;
+    }
 
-.stat{
-  background:white;
-  padding:20px;
-  border-radius:12px;
-  border-left:5px solid #07518b;
-}
+    .primary-btn:hover {
+      background: #064889;
+    }
 
-.stat span{
-  display:block;
-  font-size:14px;
-}
+    .secondary-btn {
+      border: 1px solid #d0d5dd;
+      background: white;
+      color: #344054;
+      border-radius: 9px;
+      padding: 9px 13px;
+      font-weight: 600;
+    }
 
-.stat b{
-  display:block;
-  font-size:28px;
-  margin-top:7px;
-}
+    .danger-btn {
+      border: none;
+      background: #fee4e2;
+      color: #b42318;
+      border-radius: 8px;
+      padding: 8px 11px;
+      font-weight: 700;
+    }
 
-.table-wrap{
-  overflow-x:auto;
-}
+    .forgot {
+      text-align: center;
+      margin-top: 17px;
+    }
 
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:750px;
-}
+    .forgot button {
+      background: none;
+      border: none;
+      color: #0755a5;
+      font-size: 13px;
+      font-weight: 700;
+    }
 
-th,td{
-  border-bottom:1px solid #e4e9ef;
-  padding:11px;
-  text-align:left;
-  vertical-align:top;
-}
+    #loginMessage {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 13px;
+      min-height: 18px;
+    }
 
-th{
-  background:#eef4f9;
-}
+    /* APP */
 
-.status{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:700;
-}
+    #adminApp {
+      min-height: 100vh;
+    }
 
-.pending{background:#fff1bd}
-.approved,.active,.published{background:#ccefdc}
-.rejected,.revoked,.draft{background:#ffd7d7}
+    .topbar {
+      height: 70px;
+      background: white;
+      border-bottom: 1px solid #e4e7ec;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
 
-.actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-}
+    .topbar-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #0755a5;
+    }
 
-.actions button{
-  padding:7px 9px;
-  font-size:12px;
-}
+    .topbar-subtitle {
+      font-size: 11px;
+      color: #667085;
+      margin-top: 2px;
+    }
 
-.notice{
-  padding:12px;
-  border-radius:8px;
-  margin-bottom:15px;
-}
+    .logout-btn {
+      border: none;
+      background: #fff1f0;
+      color: #b42318;
+      padding: 9px 13px;
+      border-radius: 9px;
+      font-weight: 700;
+    }
 
-.success{
-  background:#dff7e8;
-  color:#146b3a;
-}
+    .layout {
+      display: flex;
+      min-height: calc(100vh - 70px);
+    }
 
-.error{
-  background:#ffe4e4;
-  color:#9b2020;
-}
+    .sidebar {
+      width: 235px;
+      background: #082d57;
+      color: white;
+      padding: 18px 12px;
+      flex-shrink: 0;
+    }
 
-.muted{
-  color:#68737d;
-  font-size:14px;
-}
+    .nav-btn {
+      width: 100%;
+      text-align: left;
+      border: none;
+      background: transparent;
+      color: #dcecff;
+      padding: 12px 13px;
+      border-radius: 9px;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
 
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.55);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  z-index:999;
-}
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: rgba(255,255,255,0.13);
+      color: white;
+    }
 
-.modal-box{
-  background:white;
-  max-width:600px;
-  width:100%;
-  max-height:90vh;
-  overflow:auto;
-  border-radius:14px;
-  padding:20px;
-}
+    .content {
+      flex: 1;
+      padding: 26px;
+      overflow-x: hidden;
+    }
 
-@media(max-width:600px){
-  .container{padding:12px}
-  header{padding:15px}
-  header h1{font-size:18px}
-  .login{margin:30px auto}
-}
-</style>
+    .page-title {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 25px;
+    }
+
+    .stat-card {
+      background: white;
+      border: 1px solid #e4e7ec;
+      border-radius: 15px;
+      padding: 20px;
+    }
+
+    .stat-card .number {
+      font-size: 30px;
+      font-weight: 800;
+      color: #0755a5;
+    }
+
+    .stat-card .label {
+      margin-top: 5px;
+      color: #667085;
+      font-size: 13px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid #e4e7ec;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .panel-header h3 {
+      font-size: 17px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 750px;
+    }
+
+    th,
+    td {
+      padding: 12px 10px;
+      border-bottom: 1px solid #eaecf0;
+      text-align: left;
+      font-size: 13px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8fafc;
+      color: #475467;
+      font-weight: 800;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 5px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .status-pending {
+      background: #fff4cc;
+      color: #8a6100;
+    }
+
+    .status-approved,
+    .status-active,
+    .status-valid {
+      background: #dcfae6;
+      color: #067647;
+    }
+
+    .status-rejected,
+    .status-revoked {
+      background: #fee4e2;
+      color: #b42318;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .small-btn {
+      border: 1px solid #d0d5dd;
+      background: white;
+      padding: 7px 9px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .small-btn:hover {
+      background: #f2f4f7;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .empty {
+      padding: 25px;
+      text-align: center;
+      color: #667085;
+    }
+
+    .message {
+      margin: 10px 0;
+      padding: 11px 13px;
+      border-radius: 9px;
+      font-size: 13px;
+      display: none;
+    }
+
+    .message.success {
+      display: block;
+      background: #dcfae6;
+      color: #067647;
+    }
+
+    .message.error {
+      display: block;
+      background: #fee4e2;
+      color: #b42318;
+    }
+
+    /* MODAL */
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(16,24,40,0.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      z-index: 100;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 700px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .close-btn {
+      border: none;
+      background: #f2f4f7;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 20px;
+    }
+
+    /* CERTIFICATE */
+
+    #certificatePreview {
+      width: 794px;
+      max-width: 100%;
+      min-height: 1123px;
+      background: white;
+      margin: auto;
+      padding: 70px 60px;
+      text-align: center;
+      border: 10px solid #0755a5;
+      position: relative;
+    }
+
+    .cert-org {
+      font-size: 15px;
+      letter-spacing: 2px;
+      font-weight: 800;
+      color: #0755a5;
+    }
+
+    .cert-title {
+      margin-top: 65px;
+      font-size: 35px;
+      letter-spacing: 2px;
+      font-weight: 900;
+      color: #172033;
+    }
+
+    .cert-text {
+      margin-top: 45px;
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .cert-name {
+      margin: 25px 0;
+      font-size: 34px;
+      font-weight: 900;
+      color: #0755a5;
+    }
+
+    .cert-details {
+      margin-top: 40px;
+      line-height: 2;
+      font-size: 14px;
+    }
+
+    .cert-stamp {
+      margin: 55px auto 20px;
+      width: 155px;
+      height: 65px;
+      border: 2px solid #0755a5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 900;
+      color: #0755a5;
+    }
+
+    #qrBox {
+      margin: 25px auto;
+      width: 130px;
+      min-height: 130px;
+    }
+
+    @media (max-width: 900px) {
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .sidebar {
+        width: 190px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      .topbar {
+        padding: 0 14px;
+      }
+
+      .topbar-title {
+        font-size: 16px;
+      }
+
+      .layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        padding: 8px;
+      }
+
+      .nav-btn {
+        white-space: nowrap;
+        width: auto;
+        margin-right: 4px;
+      }
+
+      .content {
+        padding: 15px;
+      }
+
+      .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+
+      .login-card {
+        padding: 25px 20px;
+      }
+    }
+
+    @media print {
+      body * {
+        visibility: hidden !important;
+      }
+
+      #certificatePreview,
+      #certificatePreview * {
+        visibility: visible !important;
+      }
+
+      #certificatePreview {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 794px;
+        min-height: 1123px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <!-- ================= LOGIN ================= -->
 
-<div id="loginPage" class="container">
-  <div class="card login">
+<section id="loginScreen">
 
-    <h1>BADLEGA KHAGARIA</h1>
-    <h2>Private Admin Panel</h2>
+  <div class="login-card">
 
-    <p class="muted">
-      Only authorized organization administrators can access this area.
-    </p>
+    <div class="brand">
+      <img
+        class="brand-logo"
+        src="logo.png"
+        alt="Badlega Khagaria Logo"
+        onerror="this.style.display='none'"
+      >
 
-    <div id="loginMsg"></div>
+      <h1>BADLEGA KHAGARIA</h1>
+      <p>Admin Panel • Secure Management</p>
+    </div>
 
-    <label>Email</label>
-    <input id="loginEmail" type="email" placeholder="Admin email">
+    <div class="form-group">
+      <label for="loginEmail">Email</label>
+      <input
+        id="loginEmail"
+        type="email"
+        value="badlegakhagaria@gmail.com"
+        autocomplete="username"
+        placeholder="Admin email"
+      >
+    </div>
 
-    <label>Password</label>
-    <input id="loginPassword" type="password" placeholder="Password">
+    <div class="form-group">
+      <label for="loginPassword">Password</label>
+      <input
+        id="loginPassword"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Admin password"
+      >
+    </div>
 
-    <br>
-
-    <button class="btn-blue" style="width:100%" onclick="login()">
-      LOGIN
+    <button class="primary-btn" id="loginBtn">
+      Login to Admin Panel
     </button>
 
-    <button
-      class="btn-gray"
-      style="width:100%;margin-top:10px"
-      onclick="forgotPassword()">
-      FORGOT PASSWORD
-    </button>
+    <div class="forgot">
+      <button id="forgotBtn">
+        Forgot password?
+      </button>
+    </div>
+
+    <div id="loginMessage"></div>
 
   </div>
-</div>
 
-
-<!-- ================= RESET PASSWORD ================= -->
-
-<div id="resetPage" class="container hidden">
-  <div class="card login">
-
-    <h2>Set New Password</h2>
-
-    <div id="resetMsg"></div>
-
-    <label>New Password</label>
-    <input id="newPassword" type="password" placeholder="New password">
-
-    <label>Confirm Password</label>
-    <input id="confirmPassword" type="password" placeholder="Confirm password">
-
-    <br>
-
-    <button class="btn-blue" style="width:100%" onclick="updatePassword()">
-      UPDATE PASSWORD
-    </button>
-
-  </div>
-</div>
+</section>
 
 
 <!-- ================= ADMIN APP ================= -->
 
-<div id="adminApp" class="hidden">
+<section id="adminApp" class="hidden">
 
-<header>
-  <div>
-    <h1>BADLEGA KHAGARIA — ADMIN</h1>
-    <small>Organization Management Dashboard</small>
+  <header class="topbar">
+
+    <div>
+      <div class="topbar-title">BADLEGA KHAGARIA</div>
+      <div class="topbar-subtitle">Organization Admin Panel</div>
+    </div>
+
+    <button class="logout-btn" id="logoutBtn">
+      Logout
+    </button>
+
+  </header>
+
+
+  <div class="layout">
+
+    <aside class="sidebar">
+
+      <button class="nav-btn active" data-page="dashboard">
+        📊 Dashboard
+      </button>
+
+      <button class="nav-btn" data-page="volunteers">
+        👥 Volunteers
+      </button>
+
+      <button class="nav-btn" data-page="certificates">
+        📜 Certificates
+      </button>
+
+      <button class="nav-btn" data-page="news">
+        📰 News
+      </button>
+
+      <button class="nav-btn" data-page="events">
+        📅 Events
+      </button>
+
+      <button class="nav-btn" data-page="achievements">
+        🏆 Achievements
+      </button>
+
+      <button class="nav-btn" data-page="messages">
+        ✉️ Messages
+      </button>
+
+    </aside>
+
+
+    <main class="content">
+
+      <!-- DASHBOARD -->
+
+      <div id="page-dashboard" class="page">
+
+        <h2 class="page-title">Dashboard</h2>
+
+        <div class="stats">
+
+          <div class="stat-card">
+            <div class="number" id="statVolunteers">0</div>
+            <div class="label">Total Volunteers</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="number" id="statPending">0</div>
+            <div class="label">Pending Applications</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="number" id="statCertificates">0</div>
+            <div class="label">Certificates</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="number" id="statMessages">0</div>
+            <div class="label">Messages</div>
+          </div>
+
+        </div>
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <h3>Recent Volunteer Applications</h3>
+            <button class="secondary-btn" onclick="showPage('volunteers')">
+              View All
+            </button>
+          </div>
+
+          <div id="recentVolunteers"></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- VOLUNTEERS -->
+
+      <div id="page-volunteers" class="page hidden">
+
+        <h2 class="page-title">Volunteers</h2>
+
+        <div id="volunteerMessage" class="message"></div>
+
+        <div class="panel">
+
+          <div class="panel-header">
+
+            <h3>Volunteer Applications</h3>
+
+            <button
+              class="secondary-btn"
+              onclick="loadVolunteers()"
+            >
+              Refresh
+            </button>
+
+          </div>
+
+          <div class="table-wrap">
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Volunteer ID</th>
+                  <th>Name</th>
+                  <th>Instagram</th>
+                  <th>Location</th>
+                  <th>Education</th>
+                  <th>Status</th>
+                  <th>Created</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody id="volunteerTable"></tbody>
+
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- CERTIFICATES -->
+
+      <div id="page-certificates" class="page hidden">
+
+        <h2 class="page-title">Certificates</h2>
+
+        <div id="certificateMessage" class="message"></div>
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <h3>Issued Certificates</h3>
+
+            <button
+              class="secondary-btn"
+              onclick="loadCertificates()"
+            >
+              Refresh
+            </button>
+          </div>
+
+          <div class="table-wrap">
+
+            <table>
+
+              <thead>
+                <tr>
+                  <th>Certificate ID</th>
+                  <th>Volunteer ID</th>
+                  <th>Name</th>
+                  <th>Issue Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+
+              <tbody id="certificateTable"></tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- NEWS -->
+
+      <div id="page-news" class="page hidden">
+
+        <h2 class="page-title">News & Updates</h2>
+
+        <div id="newsMessage" class="message"></div>
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <h3>Add News</h3>
+          </div>
+
+          <form id="newsForm">
+
+            <div class="form-grid">
+
+              <div>
+                <label>Title</label>
+                <input id="newsTitle" required>
+              </div>
+
+              <div>
+                <label>Status</label>
+
+                <select id="newsStatus">
+                  <option value="published">Published</option>
+                  <option value="draft">Draft</option>
+                </select>
+
+              </div>
+
+              <div class="full">
+                <label>Content</label>
+                <textarea id="newsContent" required></textarea>
+              </div>
+
+            </div>
+
+            <br>
+
+            <button class="primary-btn" type="submit">
+              Add News
+            </button>
+
+          </form>
+
+        </div>
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <h3>Existing News</h3>
+          </div>
+
+          <div id="newsList"></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- EVENTS -->
+
+      <div id="page-events" class="page hidden">
+
+        <h2 class="page-title">Events</h2>
+
+        <div id="eventMessage" class="message"></div>
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <h3>Add Event</h3>
+          </div>
+
+          <form id="eventForm">
+
+            <div class="form-grid">
+
+              <div>
+                <label>Event Title</label>
+                <input id="eventTitle" required>
+              </div>
+
+              <div>
+                <label>Event Date</label>
+                <input id="eventDate" type="date" required>
+              </div>
+
+              <div>
+                <label>Location</label>
+                <input id="eventLocation">
+              </div>
+
+              <div>
+                <label>Status</label>
+
+                <select id="eventStatus">
+                  <option value="upcoming">Upcoming</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+
+              </div>
+
+              <div class="full">
+                <label>Description</label>
+                <textarea id="eventDescription"></textarea>
+              </div>
+
+            </div>
+
+            <br>
+
+            <button class="primary-btn" type="submit">
+              Add Event
+            </button>
+
+          </form>
+
+        </div>
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <h3>Existing Events</h3>
+          </div>
+
+          <div id="eventList"></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- ACHIEVEMENTS -->
+
+      <div id="page-achievements" class="page hidden">
+
+        <h2 class="page-title">Achievements / Impact</h2>
+
+        <div id="achievementMessage" class="message"></div>
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <h3>Add Achievement</h3>
+          </div>
+
+          <form id="achievementForm">
+
+            <div class="form-grid">
+
+              <div class="full">
+                <label>Title</label>
+                <input id="achievementTitle" required>
+              </div>
+
+              <div class="full">
+                <label>Description</label>
+                <textarea id="achievementDescription" required></textarea>
+              </div>
+
+            </div>
+
+            <br>
+
+            <button class="primary-btn" type="submit">
+              Add Achievement
+            </button>
+
+          </form>
+
+        </div>
+
+        <div class="panel">
+
+          <div class="panel-header">
+            <h3>Existing Achievements</h3>
+          </div>
+
+          <div id="achievementList"></div>
+
+        </div>
+
+      </div>
+
+
+      <!-- MESSAGES -->
+
+      <div id="page-messages" class="page hidden">
+
+        <h2 class="page-title">Contact Messages</h2>
+
+        <div class="panel">
+
+          <div class="panel-h
+            <script>
+/* =========================================================
+   BADLEGA KHAGARIA — PUBLIC WEBSITE SYSTEM
+========================================================= */
+
+const BK_SUPABASE_URL =
+  "https://lvlbjryjkasodfsobus.supabase.co";
+
+const BK_SUPABASE_KEY =
+  "sb_publishable_T_5P6RHg6d7hksLVkCi_qA_3uplsD0B";
+
+const bkSupabase =
+  window.supabase.createClient(
+    BK_SUPABASE_URL,
+    BK_SUPABASE_KEY
+  );
+
+
+/* =========================================================
+   HELPER
+========================================================= */
+
+function bkEscape(value) {
+
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+function bkDate(value) {
+
+  if (!value) return "";
+
+  return new Date(value).toLocaleDateString(
+    "en-IN",
+    {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    }
+  );
+}
+
+
+/* =========================================================
+   JOIN OUR TEAM
+========================================================= */
+
+const volunteerForm =
+  document.getElementById("volunteerForm");
+
+
+if (volunteerForm) {
+
+  volunteerForm.addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+      const submitButton =
+        volunteerForm.querySelector(
+          'button[type="submit"]'
+        );
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent =
+          "Submitting...";
+      }
+
+      try {
+
+        const f =
+          new FormData(volunteerForm);
+
+        const consentField =
+          volunteerForm.querySelector(
+            'input[type="checkbox"]'
+          );
+
+        if (
+          consentField &&
+          !consentField.checked
+        ) {
+
+          alert(
+            "Please consent checkbox select karo."
+          );
+
+          return;
+        }
+
+
+        const volunteerData = {
+
+          full_name:
+            f.get("full_name") || "",
+
+          instagram_username:
+            f.get("instagram") || "",
+
+          email:
+            f.get("email") || null,
+
+          village_city:
+            f.get("village_city") || "",
+
+          education_occupation:
+            f.get("education_occupation") || "",
+
+          area_of_interest:
+            f.get("interest") || "",
+
+          why_join:
+            f.get("why_join") || "",
+
+          skills:
+            f.get("skills") || "",
+
+          prior_social_work:
+            f.get("prior_work") || "",
+
+          positive_change:
+            f.get("positive_change") || "",
+
+          preferred_contact:
+            f.get("preferred_contact") ||
+            "Instagram",
+
+          consent: true
+
+        };
+
+
+        const {
+          data,
+          error
+        } = await bkSupabase
+          .from("volunteers")
+          .insert([volunteerData])
+          .select("volunteer_id")
+          .single();
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        volunteerForm.reset();
+
+
+        alert(
+          "Application successfully submit ho gaya! 🎉\n\n" +
+          "Aapka Volunteer ID: " +
+          (data?.volunteer_id || "Generated") +
+          "\n\nBadlega Khagaria team aapki application review karegi."
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Volunteer submission error:",
+          error
+        );
+
+        alert(
+          "Application submit nahi ho paya. Please try again."
+        );
+
+      } finally {
+
+        if (submitButton) {
+
+          submitButton.disabled = false;
+
+          submitButton.textContent =
+            "Submit Application";
+        }
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   CERTIFICATE VERIFICATION UI
+========================================================= */
+
+function createCertificateVerification() {
+
+  let section =
+    document.getElementById(
+      "certificateVerification"
+    );
+
+  if (section) return section;
+
+
+  section =
+    document.createElement("section");
+
+  section.id =
+    "certificateVerification";
+
+  section.innerHTML = `
+
+    <div style="
+      max-width:760px;
+      margin:50px auto;
+      padding:30px 20px;
+      text-align:center;
+    ">
+
+      <h2 style="
+        margin-bottom:10px;
+      ">
+        Certificate Verification
+      </h2>
+
+      <p style="
+        color:#667085;
+        margin-bottom:22px;
+      ">
+        Verify a Badlega Khagaria volunteer certificate
+        using Certificate ID or Volunteer ID.
+      </p>
+
+      <form
+        id="certificateVerifyForm"
+        style="
+          display:flex;
+          gap:10px;
+          max-width:600px;
+          margin:auto;
+          flex-wrap:wrap;
+          justify-content:center;
+        "
+      >
+
+        <input
+          id="certificateCode"
+          type="text"
+          placeholder="Enter Certificate ID or Volunteer ID"
+          autocomplete="off"
+          required
+          style="
+            flex:1;
+            min-width:240px;
+            padding:13px 15px;
+            border:1px solid #d0d5dd;
+            border-radius:10px;
+          "
+        >
+
+        <button
+          type="submit"
+          style="
+            padding:13px 20px;
+            border:0;
+            border-radius:10px;
+            background:#0755a5;
+            color:white;
+            font-weight:700;
+            cursor:pointer;
+          "
+        >
+          Verify Certificate
+        </button>
+
+      </form>
+
+      <div
+        id="certificateVerificationResult"
+        style="margin-top:25px;"
+      ></div>
+
+    </div>
+  `;
+
+
+  /*
+    Existing footer se pehle insert karne ki koshish.
+    Agar footer na mile to body ke end mein.
+  */
+
+  const footer =
+    document.querySelector("footer");
+
+  if (footer) {
+    footer.parentNode.insertBefore(
+      section,
+      footer
+    );
+  } else {
+    document.body.appendChild(section);
+  }
+
+  return section;
+}
+
+
+async function verifyCertificate(code) {
+
+  const result =
+    document.getElementById(
+      "certificateVerificationResult"
+    );
+
+  if (!result) return;
+
+
+  result.innerHTML = `
+    <p style="color:#667085;">
+      Verifying certificate...
+    </p>
+  `;
+
+
+  try {
+
+    const {
+      data,
+      error
+    } = await bkSupabase.rpc(
+      "verify_certificate",
+      {
+        p_code: code
+      }
+    );
+
+
+    if (error) {
+      throw error;
+    }
+
+
+    if (!data || data.length === 0) {
+
+      result.innerHTML = `
+
+        <div style="
+          padding:18px;
+          border-radius:12px;
+          background:#fff1f0;
+          color:#b42318;
+        ">
+
+          <strong>
+            Certificate Not Found
+          </strong>
+
+          <p style="margin-top:7px;">
+            Please check the Certificate ID
+            or Volunteer ID and try again.
+          </p>
+
+        </div>
+      `;
+
+      return;
+    }
+
+
+    const certificate =
+      data[0];
+
+
+    const status =
+      String(
+        certificate.status || ""
+      ).toLowerCase();
+
+
+    const isValid =
+      status === "valid";
+
+
+    result.innerHTML = `
+
+      <div style="
+        padding:25px;
+        border-radius:15px;
+        border:1px solid ${isValid ? "#abefc6" : "#fecdca"};
+        background:${isValid ? "#f6fef9" : "#fffafa"};
+        text-align:left;
+      ">
+
+        <div style="
+          text-align:center;
+          font-size:30px;
+          margin-bottom:8px;
+        ">
+          ${isValid ? "✓" : "!"}
+        </div>
+
+        <h3 style="
+          text-align:center;
+          color:${isValid ? "#067647" : "#b42318"};
+          margin-bottom:20px;
+        ">
+          ${
+            isValid
+              ? "Certificate Verified"
+              : "Certificate Revoked"
+          }
+        </h3>
+
+        <div style="
+          line-height:1.9;
+        ">
+
+          <p>
+            <strong>Volunteer Name:</strong>
+            ${bkEscape(certificate.volunteer_name)}
+          </p>
+
+          <p>
+            <strong>Volunteer ID:</strong>
+            ${bkEscape(certificate.volunteer_id)}
+          </p>
+
+          <p>
+            <strong>Certificate ID:</strong>
+            ${bkEscape(certificate.certificate_id)}
+          </p>
+
+          <p>
+            <strong>Issue Date:</strong>
+            ${bkDate(certificate.issue_date)}
+          </p>
+
+          <p>
+            <strong>Status:</strong>
+            ${bkEscape(certificate.status)}
+          </p>
+
+        </div>
+
+        <div style="
+          margin-top:20px;
+          text-align:center;
+          font-weight:700;
+          color:#0755a5;
+        ">
+          BADLEGA KHAGARIA ORGANIZATION
+        </div>
+
+      </div>
+    `;
+
+
+  } catch (error) {
+
+    console.error(
+      "Certificate verification error:",
+      error
+    );
+
+    result.innerHTML = `
+
+      <div style="
+        padding:18px;
+        border-radius:12px;
+        background:#fff1f0;
+        color:#b42318;
+      ">
+        Verification service temporarily unavailable.
+        Please try again.
+      </div>
+    `;
+  }
+}
+
+
+/* =========================================================
+   NEWS
+========================================================= */
+
+async function loadPublicNews() {
+
+  const container =
+    document.getElementById(
+      "publicNews"
+    );
+
+  if (!container) return;
+
+
+  container.innerHTML =
+    "<p>Loading news...</p>";
+
+
+  try {
+
+    const {
+      data,
+      error
+    } = await bkSupabase
+      .from("news")
+      .select(
+        "id,title,content,status,created_at"
+      )
+      .eq("status", "published")
+      .order(
+        "created_at",
+        { ascending: false }
+      );
+
+
+    if (error) throw error;
+
+
+    if (!data || data.length === 0) {
+
+      container.innerHTML =
+        "<p>No news updates available yet.</p>";
+
+      return;
+    }
+
+
+    container.innerHTML =
+      data.map(item => `
+
+        <article style="
+          padding:20px;
+          margin-bottom:15px;
+          border:1px solid #e4e7ec;
+          border-radius:14px;
+          background:#fff;
+        ">
+
+          <h3>
+            ${bkEscape(item.title)}
+          </h3>
+
+          <small style="
+            color:#667085;
+          ">
+            ${bkDate(item.created_at)}
+          </small>
+
+          <p style="
+            margin-top:12px;
+            line-height:1.7;
+          ">
+            ${bkEscape(item.content)}
+          </p>
+
+        </article>
+
+      `).join("");
+
+
+  } catch (error) {
+
+    console.error(
+      "News loading error:",
+      error
+    );
+
+    container.innerHTML =
+      "<p>News load nahi ho payi.</p>";
+  }
+}
+
+
+/* =========================================================
+   EVENTS
+========================================================= */
+
+async function loadPublicEvents() {
+
+  const container =
+    document.getElementById(
+      "publicEvents"
+    );
+
+  if (!container) return;
+
+
+  container.innerHTML =
+    "<p>Loading events...</p>";
+
+
+  try {
+
+    const {
+      data,
+      error
+    } = await bkSupabase
+      .from("events")
+      .select(
+        "id,title,event_date,location,description,status"
+      )
+      .order(
+        "event_date",
+        { ascending: true }
+      );
+
+
+    if (error) throw error;
+
+
+    if (!data || data.length === 0) {
+
+      container.innerHTML =
+        "<p>No events available yet.</p>";
+
+      return;
+    }
+
+
+    container.innerHTML =
+      data.map(item => `
+
+        <article style="
+          padding:20px;
+          margin-bottom:15px;
+          border:1px solid #e4e7ec;
+          border-radius:14px;
+          background:#fff;
+        ">
+
+          <h3>
+            ${bkEscape(item.title)}
+          </h3>
+
+          <p style="
+            margin-top:7px;
+            color:#0755a5;
+            font-weight:700;
+          ">
+            ${bkDate(item.event_date)}
+          </p>
+
+          ${
+            item.location
+              ? `
+                <p>
+                  📍 ${bkEscape(item.location)}
+                </p>
+              `
+              : ""
+          }
+
+          <p style="
+            margin-top:10px;
+            line-height:1.7;
+          ">
+            ${bkEscape(item.description || "")}
+          </p>
+
+        </article>
+
+      `).join("");
+
+
+  } catch (error) {
+
+    console.error(
+      "Events loading error:",
+      error
+    );
+
+    container.innerHTML =
+      "<p>Events load nahi ho paye.</p>";
+  }
+}
+
+
+/* =========================================================
+   ACHIEVEMENTS
+========================================================= */
+
+async function loadPublicAchievements() {
+
+  const container =
+    document.getElementById(
+      "publicAchievements"
+    );
+
+  if (!container) return;
+
+
+  container.innerHTML =
+    "<p>Loading achievements...</p>";
+
+
+  try {
+
+    const {
+      data,
+      error
+    } = await bkSupabase
+      .from("achievements")
+      .select(
+        "id,title,description,created_at"
+      )
+      .order(
+        "created_at",
+        { ascending: false }
+      );
+
+
+    if (error) throw error;
+
+
+    if (!data || data.length === 0) {
+
+      container.innerHTML =
+        "<p>No achievements available yet.</p>";
+
+      return;
+    }
+
+
+    container.innerHTML =
+      data.map(item => `
+
+        <article style="
+          padding:20px;
+          margin-bottom:15px;
+          border:1px solid #e4e7ec;
+          border-radius:14px;
+          background:#fff;
+        ">
+
+          <h3>
+            ${bkEscape(item.title)}
+          </h3>
+
+          <p style="
+            margin-top:10px;
+            line-height:1.7;
+          ">
+            ${bkEscape(item.description)}
+          </p>
+
+        </article>
+
+      `).join("");
+
+
+  } catch (error) {
+
+    console.error(
+      "Achievements loading error:",
+      error
+    );
+
+    container.innerHTML =
+      "<p>Achievements load nahi ho paye.</p>";
+  }
+}
+
+
+/* =========================================================
+   CONTACT FORM
+========================================================= */
+
+const contactForm =
+  document.getElementById(
+    "contactForm"
+  );
+
+
+if (contactForm) {
+
+  contactForm.addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const f =
+        new FormData(contactForm);
+
+
+      const button =
+        contactForm.querySelector(
+          'button[type="submit"]'
+        );
+
+
+      if (button) {
+
+        button.disabled = true;
+
+        button.textContent =
+          "Sending...";
+      }
+
+
+      try {
+
+        const {
+          error
+        } = await bkSupabase
+          .from("contact_messages")
+          .insert([{
+
+            name:
+              f.get("name") || "",
+
+            email:
+              f.get("email") || "",
+
+            message:
+              f.get("message") || ""
+
+          }]);
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        contactForm.reset();
+
+
+        alert(
+          "Message successfully send ho gaya. Thank you! 🙏"
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Contact form error:",
+          error
+        );
+
+        alert(
+          "Message send nahi ho paya. Please try again."
+        );
+
+
+      } finally {
+
+        if (button) {
+
+          button.disabled = false;
+
+          button.textContent =
+            "Send Message";
+        }
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   CERTIFICATE FORM + QR LINK
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    const section =
+      createCertificateVerification();
+
+
+    const form =
+      document.getElementById(
+        "certificateVerifyForm"
+      );
+
+
+    if (form) {
+
+      form.addEventListener(
+        "submit",
+        async function(event) {
+
+          event.preventDefault();
+
+          const code =
+            document
+              .getElementById(
+                "certificateCode"
+              )
+              .value
+              .trim();
+
+
+          if (!code) return;
+
+
+          await verifyCertificate(code);
+
+        }
+      );
+
+    }
+
+
+    /*
+      QR code se direct certificate open hoga.
+      Example:
+      index.html#certificate=BK-CERT-0001
+    */
+
+    const hash =
+      window.location.hash;
+
+
+    if (
+      hash &&
+      hash.startsWith("#certificate=")
+    ) {
+
+      const code =
+        decodeURIComponent(
+          hash.substring(
+            "#certificate=".length
+          )
+        );
+
+
+      const input =
+        document.getElementById(
+          "certificateCode"
+        );
+
+
+      if (input) {
+        input.value = code;
+      }
+
+
+      verifyCertificate(code);
+
+
+      section.scrollIntoView({
+        behavior: "smooth"
+      });
+
+    }
+
+
+    loadPublicNews();
+    loadPublicEvents();
+    loadPublicAchievements();
+
+  }
+);
+
+  </script>
+                  <div class="panel-header">
+        <h3>Received Contact Messages</h3>
+      </div>
+
+      <div id="messageList"></div>
+
+    </div>
+
   </div>
 
-  <button class="btn-red" onclick="logout()">Logout</button>
-</header>
 
-<div class="container">
+  <!-- =====================================================
+       WEBSITE SETTINGS / QUICK INFO
+  ====================================================== -->
 
-  <div id="globalMsg"></div>
+  <div id="page-settings" class="page hidden">
 
-  <!-- TABS -->
+    <h2 class="page-title">Website Information</h2>
 
-  <div class="tabs">
+    <div class="panel">
 
-    <button class="tab active"
-      onclick="showPage('dashboard',this)">
-      Dashboard
-    </button>
+      <div class="panel-header">
+        <h3>Badlega Khagaria</h3>
+      </div>
 
-    <button class="tab"
-      onclick="showPage('volunteers',this);loadVolunteers()">
-      Volunteers
-    </button>
+      <div style="line-height:1.9;">
 
-    <button class="tab"
-      onclick="showPage('certificates',this);loadCertificates()">
-      Certificates
-    </button>
+        <p>
+          <strong>Organization:</strong>
+          BADLEGA KHAGARIA
+        </p>
 
-    <button class="tab"
-      onclick="showPage('news',this);loadNews()">
-      News
-    </button>
+        <p>
+          <strong>Tagline:</strong>
+          A VOICE OF CHANGE • A MOVEMENT FOR THE FUTURE
+        </p>
 
-    <button class="tab"
-      onclick="showPage('events',this);loadEvents()">
-      Events
-    </button>
+        <p>
+          <strong>Email:</strong>
+          badlegakhagaria@gmail.com
+        </p>
 
-    <button class="tab"
-      onclick="showPage('achievements',this);loadAchievements()">
-      Achievements
-    </button>
+        <p>
+          <strong>WhatsApp:</strong>
+          +91 80519 45654
+        </p>
 
-    <button class="tab"
-      onclick="showPage('messages',this);loadMessages()">
-      Messages
-    </button>
+        <p>
+          <strong>Instagram:</strong>
+          @badlega__khagaria
+        </p>
+
+        <p>
+          <strong>Facebook:</strong>
+          @badlega khagaria
+        </p>
+
+      </div>
+
+    </div>
 
   </div>
 
 
-  <!-- ================= DASHBOARD ================= -->
+</main>
 
-  <section id="dashboard" class="page">
 
-    <div class="grid">
+<!-- =========================================================
+     SUPABASE
+========================================================= -->
 
-      <div class="stat">
-        <span>Total Volunteers</span>
-        <b id="statVolunteers">0</b>
-      </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-      <div class="stat">
-        <span>Pending Applications</span>
-        <b id="statPending">0</b>
-      </div>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 
-      <div class="stat">
-        <span>Certificates</span>
-        <b id="statCertificates">0</b>
-      </div>
-
-      <div class="stat">
-        <span>Contact Messages</span>
-        <b id="statMessages">0</b>
-      </div>
-
-    </div>
-
-    <div class="card" style="margin-top:20px">
-      <h2>Welcome to Admin Panel</h2>
-      <p>
-        Yahan se Badlega Khagaria ke volunteers, certificates,
-        news, events, achievements aur contact messages manage kar sakte hain.
-      </p>
-    </div>
-
-  </section>
-
-
-  <!-- ================= VOLUNTEERS ================= -->
-
-  <section id="volunteers" class="page hidden">
-
-    <div class="card">
-
-      <h2>Volunteer Applications</h2>
-
-      <p class="muted">
-        Review applications and manage volunteer status.
-      </p>
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Volunteer ID</th>
-              <th>Name</th>
-              <th>Instagram</th>
-              <th>City/Village</th>
-              <th>Interest</th>
-              <th>Status</th>
-              <th>Applied</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody id="volunteerRows"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ================= CERTIFICATES ================= -->
-
-  <section id="certificates" class="page hidden">
-
-    <div class="card">
-
-      <h2>Certificates</h2>
-
-      <p class="muted">
-        Generate certificates only for approved volunteers.
-      </p>
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Certificate ID</th>
-              <th>Volunteer ID</th>
-              <th>Name</th>
-              <th>Issue Date</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="certificateRows"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ================= NEWS ================= -->
-
-  <section id="news" class="page hidden">
-
-    <div class="card">
-
-      <h2>News & Updates</h2>
-
-      <label>Title</label>
-      <input id="newsTitle" placeholder="News title">
-
-      <label>Details</label>
-      <textarea id="newsContent"
-        placeholder="News / update details"></textarea>
-
-      <label>Status</label>
-      <select id="newsStatus">
-        <option value="published">Published</option>
-        <option value="draft">Draft</option>
-      </select>
-
-      <br><br>
-
-      <button class="btn-blue" onclick="addNews()">
-        ADD NEWS
-      </button>
-
-    </div>
-
-    <div class="card">
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Content</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="newsRows"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ================= EVENTS ================= -->
-
-  <section id="events" class="page hidden">
-
-    <div class="card">
-
-      <h2>Events</h2>
-
-      <label>Event Title</label>
-      <input id="eventTitle" placeholder="Event title">
-
-      <label>Event Date</label>
-      <input id="eventDate" type="date">
-
-      <label>Location</label>
-      <input id="eventLocation" placeholder="Location">
-
-      <label>Description</label>
-      <textarea id="eventDescription"
-        placeholder="Event details"></textarea>
-
-      <label>Status</label>
-      <select id="eventStatus">
-        <option value="published">Published</option>
-        <option value="draft">Draft</option>
-      </select>
-
-      <br><br>
-
-      <button class="btn-blue" onclick="addEvent()">
-        ADD EVENT
-      </button>
-
-    </div>
-
-    <div class="card">
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Date</th>
-              <th>Location</th>
-              <th>Status</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="eventRows"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ================= ACHIEVEMENTS ================= -->
-
-  <section id="achievements" class="page hidden">
-
-    <div class="card">
-
-      <h2>Achievements / Impact</h2>
-
-      <label>Achievement Title</label>
-      <input id="achievementTitle"
-        placeholder="Achievement title">
-
-      <label>Description</label>
-      <textarea id="achievementDescription"
-        placeholder="Achievement details"></textarea>
-
-      <br><br>
-
-      <button class="btn-blue" onclick="addAchievement()">
-        ADD ACHIEVEMENT
-      </button>
-
-    </div>
-
-    <div class="card">
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Description</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="achievementRows"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </section>
-
-
-  <!-- ================= MESSAGES ================= -->
-
-  <section id="messages" class="page hidden">
-
-    <div class="card">
-
-      <h2>Contact Messages</h2>
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Message</th>
-            </tr>
-          </thead>
-
-          <tbody id="messageRows"></tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-
-  </section>
-
-</div>
-</div>
-
-
-<!-- ================= JAVASCRIPT ================= -->
 
 <script>
 
-/* =========================================
-   SUPABASE CONNECTION
-========================================= */
+/* =========================================================
+   BADLEGA KHAGARIA — ADMIN SYSTEM
+========================================================= */
 
 const SUPABASE_URL =
   "https://lvlbjryjkasodfsobus.supabase.co";
 
-/*
-  IMPORTANT:
-  Yahan apni EXISTING Supabase PUBLISHABLE KEY
-  (sb_publishable_...) paste karni hai.
+const SUPABASE_KEY =
+  "sb_publishable_T_5P6RHg6d7hksLVkCi_qA_3uplsD0B";
 
-  Service-role / secret key mat lagana.
-*/
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function escapeHTML(value) {
+
+  if (
+    value === null ||
+    value === undefined
+  ) {
+    return "";
+  }
+
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+function formatDate(value) {
+
+  if (!value) return "-";
+
+  return new Date(value).toLocaleDateString(
+    "en-IN",
+    {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    }
+  );
+}
+
+
+function showMessage(
+  elementId,
+  message,
+  success = true
+) {
+
+  const el =
+    document.getElementById(elementId);
+
+  if (!el) return;
+
+  el.textContent = message;
+
+  el.style.display = "block";
+
+  el.style.padding = "12px";
+
+  el.style.marginBottom = "15px";
+
+  el.style.borderRadius = "10px";
+
+  if (success) {
+
+    el.style.background = "#ecfdf3";
+
+    el.style.color = "#067647";
+
+  } else {
+
+    el.style.background = "#fff1f0";
+
+    el.style.color = "#b42318";
+
+  }
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+const loginForm =
+  document.getElementById("loginForm");
+
+
+if (loginForm) {
+
+  loginForm.addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+      const email =
+        document.getElementById("loginEmail")?.value
+        .trim();
+
+      const password =
+        document.getElementById("loginPassword")?.value;
+
+
+      const button =
+        loginForm.querySelector(
+          'button[type="submit"]'
+        );
+
+
+      if (button) {
+
+        button.disabled = true;
+
+        button.textContent =
+          "Signing in...";
+
+      }
+
+
+      try {
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient.auth.signInWithPassword({
+            email,
+            password
+          });
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        if (!data?.user) {
+          throw new Error("Login failed");
+        }
+
+
+        const {
+          data: adminCheck,
+          error: adminError
+        } =
+          await supabaseClient.rpc(
+            "is_admin"
+          );
+
+
+        if (adminError) {
+          throw adminError;
+        }
+
+
+        if (!adminCheck) {
+
+          await supabaseClient.auth.signOut();
+
+          throw new Error(
+            "This account is not an administrator."
+          );
+
+        }
+
+
+        showAdminPanel();
+
+
+      } catch (error) {
+
+        console.error(
+          "Login error:",
+          error
+        );
+
+        alert(
+          "Login failed. Email ya password check karo."
+        );
+
+      } finally {
+
+        if (button) {
+
+          button.disabled = false;
+
+          button.textContent =
+            "Login";
+
+        }
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SHOW / HIDE ADMIN
+========================================================= */
+
+function showAdminPanel() {
+
+  const loginPage =
+    document.getElementById("loginPage");
+
+  const adminApp =
+    document.getElementById("adminApp");
+
+
+  if (loginPage) {
+    loginPage.classList.add("hidden");
+  }
+
+  if (adminApp) {
+    adminApp.classList.remove("hidden");
+  }
+
+
+  loadDashboard();
+
+}
+
+
+function showLoginPage() {
+
+  const loginPage =
+    document.getElementById("loginPage");
+
+  const adminApp =
+    document.getElementById("adminApp");
+
+
+  if (loginPage) {
+    loginPage.classList.remove("hidden");
+  }
+
+  if (adminApp) {
+    adminApp.classList.add("hidden");
+  }
+
+}
+
+
+/* =========================================================
+   CHECK EXISTING SESSION
+========================================================= */
+
+async function checkAdminSession() {
+
+  try {
+
+    const {
+      data: {
+        session
+      }
+    } =
+      await supabaseClient.auth.getSession();
+
+
+    if (!session) {
+
+      showLoginPage();
+
+      return;
+
+    }
+
+
+    const {
+      data: isAdmin,
+      error
+    } =
+      await supabaseClient.rpc(
+        "is_admin"
+      );
+
+
+    if (error || !isAdmin) {
+
+      await supabaseClient.auth.signOut();
+
+      showLoginPage();
+
+      return;
+
+    }
+
+
+    showAdminPanel();
+
+
+  } catch (error) {
+
+    console.error(
+      "Session error:",
+      error
+    );
+
+    showLoginPage();
+
+  }
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+const logoutButton =
+  document.getElementById("logoutBtn");
+
+
+if (logoutButton) {
+
+  logoutButton.addEventListener(
+    "click",
+    async function() {
+
+      await supabaseClient.auth.signOut();
+
+      showLoginPage();
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   FORGOT PASSWORD
+========================================================= */
+
+const forgotPassword =
+  document.getElementById("forgotPassword");
+
+
+if (forgotPassword) {
+
+  forgotPassword.addEventListener(
+    "click",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const email =
+        document.getElementById("loginEmail")?.value
+        .trim();
+
+
+      if (!email) {
+
+        alert(
+          "Pehle apna admin email enter karo."
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        const {
+          error
+        } =
+          await supabaseClient.auth.resetPasswordForEmail(
+            email,
+            {
+              redirectTo:
+                window.location.href
+            }
+          );
+
+
+        if (error) {
+          throw error;
+        }
+
+
+        alert(
+          "Password reset link email par bhej diya gaya hai."
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Password reset error:",
+          error
+        );
+
+        alert(
+          "Password reset email send nahi ho paya."
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+document.querySelectorAll(
+  "[data-page]"
+).forEach(function(button) {
+
+  button.addEventListener(
+    "click",
+    function() {
+
+      const page =
+        button.getAttribute("data-page");
+
+
+      document.querySelectorAll(
+        ".page"
+      ).forEach(function(section) {
+
+        section.classList.add("hidden");
+
+      });
+
+
+      const target =
+        document.getElementById(
+          "page-" + page
+        );
+
+
+      if (target) {
+
+        target.classList.remove("hidden");
+
+      }
+
+
+      if (page === "dashboard") {
+        loadDashboard();
+      }
+
+      if (page === "volunteers") {
+        loadVolunteers();
+      }
+
+      if (page === "certificates") {
+        loadCertificates();
+      }
+
+      if (page === "news") {
+        loadNews();
+      }
+
+      if (page === "events") {
+        loadEvents();
+      }
+
+      if (page === "achievements") {
+        loadAchievements();
+      }
+
+      if (page === "messages") {
+        loadMessages();
+      }
+
+    }
+  );
+
+});
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+async function loadDashboard() {
+
+  try {
+
+    const [
+      volunteers,
+      certificates,
+      news,
+      events,
+      achievements,
+      messages
+    ] = await Promise.all([
+
+      supabaseClient
+        .from("volunteers")
+        .select("*", {
+          count: "exact",
+          head: true
+        }),
+
+      supabaseClient
+        .from("certificates")
+        .select("*", {
+          count: "exact",
+          head: true
+        }),
+
+      supabaseClient
+        .from("news")
+        .select("*", {
+          count: "exact",
+          head: true
+        }),
+
+      supabaseClient
+        .from("events")
+        .select("*", {
+          count: "exact",
+          head: true
+        }),
+
+      supabaseClient
+        .from("achievements")
+        .select("*", {
+          count: "exact",
+          head: true
+        }),
+
+      supabaseClient
+        .from("contact_messages")
+        .select("*", {
+          count: "exact",
+          head: true
+        })
+
+    ]);
+
+
+    const values = {
+
+      volunteerCount:
+        volunteers.count || 0,
+
+      certificateCount:
+        certificates.count || 0,
+
+      newsCount:
+        news.count || 0,
+
+      eventCount:
+        events.count || 0,
+
+      achievementCount:
+        achievements.count || 0,
+
+      messageCount:
+        messages.count || 0
+
+    };
+
+
+    Object.keys(values).forEach(
+      function(id) {
+
+        const el =
+          document.getElementById(id);
+
+        if (el) {
+          el.textContent =
+            values[id];
+        }
+
+      }
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Dashboard error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   VOLUNTEERS
+========================================================= */
+
+async function loadVolunteers() {
+
+  const list =
+    document.getElementById(
+      "volunteerList"
+    );
+
+  if (!list) return;
+
+
+  list.innerHTML =
+    "<p>Loading volunteers...</p>";
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("volunteers")
+        .select("*")
+        .order(
+          "created_at",
+          { ascending: false }
+        );
+
+
+    if (error) throw error;
+
+
+    if (!data || data.length === 0) {
+
+      list.innerHTML =
+        "<p>No volunteer applications yet.</p>";
+
+      return;
+
+    }
+
+
+    list.innerHTML =
+      data.map(function(item) {
+
+        return `
+
+          <div class="admin-card">
+
+            <h3>
+              ${escapeHTML(item.full_name)}
+            </h3>
+
+            <p>
+              <strong>Volunteer ID:</strong>
+              ${escapeHTML(item.volunteer_id)}
+            </p>
+
+            <p>
+              <strong>Instagram:</strong>
+              ${escapeHTML(item.instagram_username)}
+            </p>
+
+            <p>
+              <strong>Email:</strong>
+              ${escapeHTML(item.email || "-")}
+            </p>
+
+            <p>
+              <strong>Location:</strong>
+              ${escapeHTML(item.village_city)}
+            </p>
+
+            <p>
+              <strong>Interest:</strong>
+              ${escapeHTML(item.area_of_interest)}
+            </p>
+
+            <p>
+              <strong>Status:</strong>
+              ${escapeHTML(item.status || "pending")}
+            </p>
+
+            <div class="admin-actions">
+
+              <button
+                class="primary-btn"
+                onclick="updateVolunteerStatus('${item.id}','approved')"
+              >
+                Approve
+              </button>
+
+              <button
+                class="secondary-btn"
+                onclick="updateVolunteerStatus('${item.id}','rejected')"
+              >
+                Reject
+              </button>
+
+              <button
+                class="secondary-btn"
+                onclick="updateVolunteerStatus('${item.id}','pending')"
+              >
+                Pending
+              </button>
+
+              <button
+                class="secondary-btn"
+                onclick="viewVolunteer('${item.id}')"
+              >
+                View Details
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }).join("");
+
+
+  } catch (error) {
+
+    console.error(
+      "Volunteer loading error:",
+      error
+    );
+
+    list.innerHTML =
+      "<p>Volunteers load nahi ho paye.</p>";
+
+  }
+
+}
+
+
+async function updateVolunteerStatus(
+  id,
+  status
+) {
+
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("volunteers")
+        .update({
+          status: status
+        })
+        .eq("id", id);
+
+
+    if (error) throw error;
+
+
+    alert(
+      "Volunteer status updated."
+    );
+
+
+    loadVolunteers();
+
+
+  } catch (error) {
+
+    console.error(
+      error
+    );
+
+    alert(
+      "Status update nahi ho paya."
+    );
+
+  }
+
+}
+
+
+async function viewVolunteer(id) {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("volunteers")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+
+    if (error) throw error;
+
+
+    alert(
+
+      "Volunteer Details\n\n" +
+
+      "Name: " +
+      (data.full_name || "-") +
+
+      "\nVolunteer ID: " +
+      (data.volunteer_id || "-") +
+
+      "\nInstagram: " +
+      (data.instagram_username || "-") +
+
+      "\nEmail: " +
+      (data.email || "-") +
+
+      "\nLocation: " +
+      (data.village_city || "-") +
+
+      "\nEducation/Occupation: " +
+      (data.education_occupation || "-") +
+
+      "\nInterest: " +
+      (data.area_of_interest || "-") +
+
+      "\nWhy Join: " +
+      (data.why_join || "-") +
+
+      "\nSkills: " +
+      (data.skills || "-") +
+
+      "\nPrior Work: " +
+      (data.prior_social_work || "-") +
+
+      "\nPositive Change: " +
+      (data.positive_change || "-")
+
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      "Volunteer details load nahi ho paye."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   CERTIFICATES
+========================================================= */
+
+async function loadCertificates() {
+
+  const list =
+    document.getElementById(
+      "certificateList"
+    );
+
+  if (!list) return;
+
+
+  list.innerHTML =
+    "<p>Loading certificates...</p>";
+
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("certificates")
+        .select("*")
+        .order(
+          "issue_date",
+          { ascending: false }
+        );
+
+
+    if (error) throw error;
+
+
+    if (!data || data.length === 0) {
+
+      list.innerHTML =
+        "<p>No certificates created yet.</p>";
+
+      return;
+
+    }
+
+
+    list.innerHTML =
+      data.map(function(item) {
+
+        return `
+
+          <div class="admin-card">
+
+            <h3>
+              ${escapeHTML(item.volunteer_name)}
+            </h3>
+
+            <p>
+              <strong>Certificate ID:</strong>
+              ${escapeHTML(item.certificate_id)}
+            </p>
+
+            <p>
+              <strong>Volunteer ID:</strong>
+              ${escapeHTML(item.volunteer_id)}
+            </p>
+
+            <p>
+              <strong>Issue Date:</strong>
+              ${formatDate(item.issue_date)}
+            </p>
+
+            <p>
+              <strong>Status:</strong>
+              ${escapeHTML(item.status)}
+            </p>
+
+            <div class="admin-actions">
+
+              <button
+                class="primary-btn"
+                onclick="printCertificate('${item.id}')"
+              >
+                Print Certificate
+              </button>
+
+              <button
+                class="secondary-btn"
+                onclick="revokeCertificate('${item.id}')"
+              >
+                Revoke
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }).join("");
+
+
+  } catch (error) {
+
+    console.error(
+      error
+    );
+
+    list.innerHTML =
+      "<p>Certificates load nahi ho paye.</p>";
+
+  }
+
+}
+
+
+/* =========================================================
+   CREATE CERTIFICATE
+========================================================= */
+
+const certificateForm =
+  document.getElementById(
+    "certificateForm"
+  );
+
+
+if (certificateForm) {
+
+  certificateForm.addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const volunteerId =
+        document.getElementById(
+          "certificateVolunteerId"
+        )?.value.trim();
+
+
+      const volunteerName =
+        document.getElementById(
+          "certificateVolunteerName"
+        )?.value.trim();
+
+
+      if (!volunteerId || !volunteerName) {
+
+        alert(
+          "Volunteer ID aur Volunteer Name required hai."
+        );
+
+        return;
+
+      }
+
+
+      try {
+
+        const {
+          data,
+          error
+        } =
+          await supabaseClient
+            .from("certificates")
+            .insert([{
+
+              volunteer_id:
+                volunteerId,
+
+              volunteer_name:
+                volunteerName,
+
+              issue_date:
+                new Date()
+                  .toISOString()
+                  .split("T")[0],
+
+              status:
+                "valid"
+
+            }])
+            .select()
+            .single();
+
+
+        if (error) throw error;
+
+
+        alert(
+          "Certificate successfully create ho gaya!\n\n" +
+          "Certificate ID: " +
+          data.certificate_id
+        );
+
+
+        certificateForm.reset();
+
+        loadCertificates();
+
+        loadDashboard();
+
+
+      } catch (error) {
+
+        console.error(
+          "Certificate error:",
+          error
+        );
+
+        alert(
+          "Certificate create nahi ho paya."
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   REVOKE CERTIFICATE
+========================================================= */
+
+async function revokeCertificate(id) {
+
+  if (
+    !confirm(
+      "Kya aap ye certificate revoke karna chahte hain?"
+    )
+  ) {
+    return;
+  }
+
+
+  try {
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("certificates")
+        .update({
+          status: "revoked"
+        })
+        .eq("id", id);
+
+
+    if (error) throw error;
+
+
+    alert(
+      "Certificate revoked."
+    );
+
+
+    loadCertificates();
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    alert(
+      "Certificate revoke nahi ho paya."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   PRINT CERTIFICATE
+========================================================= */
+
+async function printCertificate(id) {
+
+  try {
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("certificates")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+
+    if (error) throw error;
+
+
+    const verificationURL =
+      window.location.origin +
+      window.location.pathname.replace(
+        "admin.html",
+        "index.html"
+      ) +
+      "#certificate=" +
+      encodeURICom
+    <div class="panel-header">
+  <h3>Received Contact Messages</h3>
+</div>
+
+<div id="messageList"></div>
+
+</div>
+
+</div>
+
+
+<!-- SETTINGS -->
+<div id="page-settings" class="page hidden">
+
+  <h2 class="page-title">Website Information</h2>
+
+  <div class="panel">
+
+    <div class="panel-header">
+      <h3>Badlega Khagaria</h3>
+    </div>
+
+    <div style="line-height:1.9;">
+
+      <p>
+        <strong>Organization:</strong>
+        BADLEGA KHAGARIA
+      </p>
+
+      <p>
+        <strong>Tagline:</strong>
+        A VOICE OF CHANGE • A MOVEMENT FOR THE FUTURE
+      </p>
+
+      <p>
+        <strong>Email:</strong>
+        badlegakhagaria@gmail.com
+      </p>
+
+      <p>
+        <strong>WhatsApp:</strong>
+        +91 80519 45654
+      </p>
+
+      <p>
+        <strong>Instagram:</strong>
+        @badlega__khagaria
+      </p>
+
+      <p>
+        <strong>Facebook:</strong>
+        @badlega khagaria
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+
+<script>
+
+const SUPABASE_URL =
+  "https://lvlbjryjkasodfsobus.supabase.co";
 
 const SUPABASE_KEY =
   "sb_publishable_T_5P6RHg6d7hksLVkCi_qA_3uplsD0B";
@@ -697,403 +3346,1496 @@ const supabaseClient =
   );
 
 
-/* =========================================
-   HELPERS
-========================================= */
+function escapeHTML(value) {
 
-function showMessage(text,type="success"){
-  const box=document.getElementById("globalMsg");
-
-  box.className="notice "+type;
-  box.textContent=text;
-
-  setTimeout(()=>{
-    box.className="";
-    box.textContent="";
-  },4000);
-}
-
-function escapeHTML(value){
-  if(value===null || value===undefined) return "";
+  if (
+    value === null ||
+    value === undefined
+  ) return "";
 
   return String(value)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function statusHTML(status){
-  const s=String(status || "").toLowerCase();
-
-  return `
-    <span class="status ${escapeHTML(s)}">
-      ${escapeHTML(status || "")}
-    </span>
-  `;
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
 
-/* =========================================
-   PAGE NAVIGATION
-========================================= */
+function formatDate(value) {
 
-function showPage(id,button){
+  if (!value) return "-";
 
-  document.querySelectorAll(".page")
-    .forEach(p=>p.classList.add("hidden"));
-
-  const page=document.getElementById(id);
-
-  if(page){
-    page.classList.remove("hidden");
-  }
-
-  document.querySelectorAll(".tab")
-    .forEach(t=>t.classList.remove("active"));
-
-  if(button){
-    button.classList.add("active");
-  }
+  return new Date(value).toLocaleDateString(
+    "en-IN",
+    {
+      day: "2-digit",
+      month: "long",
+      year: "numeric"
+    }
+  );
 }
 
 
-/* =========================================
-   LOGIN
-========================================= */
+/* LOGIN */
 
-async function login(){
+const loginForm =
+  document.getElementById("loginForm");
 
-  const email=
-    document.getElementById("loginEmail").value.trim();
+if (loginForm) {
 
-  const password=
-    document.getElementById("loginPassword").value;
+  loginForm.addEventListener(
+    "submit",
+    async function(event) {
 
-  const msg=
-    document.getElementById("loginMsg");
+      event.preventDefault();
 
-  msg.className="";
-  msg.textContent="";
+      const email =
+        document.getElementById("loginEmail")?.value.trim();
 
-  if(!email || !password){
+      const password =
+        document.getElementById("loginPassword")?.value;
 
-    msg.className="notice error";
-    msg.textContent=
-      "Email aur password dono enter karein.";
+      const button =
+        loginForm.querySelector(
+          'button[type="submit"]'
+        );
 
-    return;
-  }
+      if (button) {
+        button.disabled = true;
+        button.textContent = "Signing in...";
+      }
 
-  const {data,error} =
-    await supabaseClient.auth.signInWithPassword({
-      email,
-      password
-    });
+      try {
 
-  if(error){
+        const {
+          data,
+          error
+        } =
+          await supabaseClient.auth
+            .signInWithPassword({
+              email,
+              password
+            });
 
-    msg.className="notice error";
-    msg.textContent=
-      "Email ya password galat hai. Please try again.";
+        if (error) throw error;
 
-    return;
-  }
+        const {
+          data: isAdmin,
+          error: adminError
+        } =
+          await supabaseClient.rpc(
+            "is_admin"
+          );
 
-  /*
-    Login successful hone ke baad volunteer table access
-    karke check karte hain ki account authorized admin hai.
-  */
+        if (adminError) throw adminError;
 
-  const {error:adminCheckError} =
-    await supabaseClient
-      .from("volunteers")
-      .select("id")
-      .limit(1);
+        if (!isAdmin) {
 
-  if(adminCheckError){
+          await supabaseClient.auth.signOut();
 
-    await supabaseClient.auth.signOut();
+          throw new Error(
+            "Not an administrator"
+          );
+        }
 
-    msg.className="notice error";
-    msg.textContent=
-      "Login hua, lekin ye account Admin Panel ke liye authorized nahi hai.";
+        showAdminPanel();
 
-    return;
-  }
+      } catch (error) {
 
-  document.getElementById("loginPage")
-    .classList.add("hidden");
+        console.error(error);
 
-  document.getElementById("adminApp")
-    .classList.remove("hidden");
+        alert(
+          "Login failed. Email ya password check karo."
+        );
 
-  await loadDashboard();
+      } finally {
+
+        if (button) {
+          button.disabled = false;
+          button.textContent = "Login";
+        }
+
+      }
+
+    }
+  );
+
 }
 
 
-/* =========================================
-   FORGOT PASSWORD
-========================================= */
+/* SHOW ADMIN */
 
-async function forgotPassword(){
+function showAdminPanel() {
 
-  const email=
-    document.getElementById("loginEmail").value.trim();
+  const loginPage =
+    document.getElementById("loginPage");
 
-  const msg=
-    document.getElementById("loginMsg");
+  const adminApp =
+    document.getElementById("adminApp");
 
-  if(!email){
+  if (loginPage)
+    loginPage.classList.add("hidden");
 
-    msg.className="notice error";
-    msg.textContent=
-      "Pehle apna admin email enter karein.";
+  if (adminApp)
+    adminApp.classList.remove("hidden");
 
-    return;
+  loadDashboard();
+}
+
+
+function showLoginPage() {
+
+  const loginPage =
+    document.getElementById("loginPage");
+
+  const adminApp =
+    document.getElementById("adminApp");
+
+  if (loginPage)
+    loginPage.classList.remove("hidden");
+
+  if (adminApp)
+    adminApp.classList.add("hidden");
+}
+
+
+/* SESSION */
+
+async function checkAdminSession() {
+
+  try {
+
+    const {
+      data: {
+        session
+      }
+    } =
+      await supabaseClient.auth.getSession();
+
+    if (!session) {
+      showLoginPage();
+      return;
+    }
+
+    const {
+      data: isAdmin,
+      error
+    } =
+      await supabaseClient.rpc(
+        "is_admin"
+      );
+
+    if (error || !isAdmin) {
+
+      await supabaseClient.auth.signOut();
+
+      showLoginPage();
+
+      return;
+    }
+
+    showAdminPanel();
+
+  } catch (error) {
+
+    console.error(error);
+
+    showLoginPage();
+
   }
 
-  const redirectURL =
-    window.location.origin +
-    window.location.pathname;
+}
 
-  const {error} =
-    await supabaseClient.auth
-      .resetPasswordForEmail(email,{
-        redirectTo:redirectURL
+
+/* LOGOUT */
+
+const logoutBtn =
+  document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+
+  logoutBtn.addEventListener(
+    "click",
+    async function() {
+
+      await supabaseClient.auth.signOut();
+
+      showLoginPage();
+
+    }
+  );
+
+}
+
+
+/* NAVIGATION */
+
+document.querySelectorAll(
+  "[data-page]"
+).forEach(function(button) {
+
+  button.addEventListener(
+    "click",
+    function() {
+
+      const page =
+        button.getAttribute("data-page");
+
+      document.querySelectorAll(
+        ".page"
+      ).forEach(function(section) {
+
+        section.classList.add("hidden");
+
       });
 
-  if(error){
+      const target =
+        document.getElementById(
+          "page-" + page
+        );
 
-    msg.className="notice error";
-    msg.textContent=
-      "Password reset email nahi bheja ja saka. Please try again.";
+      if (target)
+        target.classList.remove("hidden");
 
-    return;
+      if (page === "dashboard")
+        loadDashboard();
+
+      if (page === "volunteers")
+        loadVolunteers();
+
+      if (page === "certificates")
+        loadCertificates();
+
+      if (page === "news")
+        loadNews();
+
+      if (page === "events")
+        loadEvents();
+
+      if (page === "achievements")
+        loadAchievements();
+
+      if (page === "messages")
+        loadMessages();
+
+    }
+  );
+
+});
+
+
+/* DASHBOARD */
+
+async function loadDashboard() {
+
+  try {
+
+    const [
+      volunteers,
+      certificates,
+      news,
+      events,
+      achievements,
+      messages
+    ] = await Promise.all([
+
+      supabaseClient
+        .from("volunteers")
+        .select("*", {
+          count: "exact",
+          head: true
+        }),
+
+      supabaseClient
+        .from("certificates")
+        .select("*", {
+          count: "exact",
+          head: true
+        }),
+
+      supabaseClient
+        .from("news")
+        .select("*", {
+          count: "exact",
+          head: true
+        }),
+
+      supabaseClient
+        .from("events")
+        .select("*", {
+          count: "exact",
+          head: true
+        }),
+
+      supabaseClient
+        .from("achievements")
+        .select("*", {
+          count: "exact",
+          head: true
+        }),
+
+      supabaseClient
+        .from("contact_messages")
+        .select("*", {
+          count: "exact",
+          head: true
+        })
+
+    ]);
+
+    const values = {
+
+      volunteerCount:
+        volunteers.count || 0,
+
+      certificateCount:
+        certificates.count || 0,
+
+      newsCount:
+        news.count || 0,
+
+      eventCount:
+        events.count || 0,
+
+      achievementCount:
+        achievements.count || 0,
+
+      messageCount:
+        messages.count || 0
+
+    };
+
+    Object.keys(values).forEach(
+      function(id) {
+
+        const el =
+          document.getElementById(id);
+
+        if (el)
+          el.textContent = values[id];
+
+      }
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Dashboard error:",
+      error
+    );
+
   }
 
-  msg.className="notice success";
-  msg.textContent=
-    "Password reset link aapke email par bhej diya gaya hai.";
 }
 
 
-/* =========================================
-   UPDATE PASSWORD
-========================================= */
+/* VOLUNTEERS */
 
-async function updatePassword(){
+async function loadVolunteers() {
 
-  const password=
-    document.getElementById("newPassword").value;
+  const list =
+    document.getElementById(
+      "volunteerList"
+    );
 
-  const confirm=
-    document.getElementById("confirmPassword").value;
+  if (!list) return;
 
-  const msg=
-    document.getElementById("resetMsg");
+  list.innerHTML =
+    "<p>Loading volunteers...</p>";
 
-  if(!password || !confirm){
+  try {
 
-    msg.className="notice error";
-    msg.textContent=
-      "Dono password fields fill karein.";
+    const {
+      data,
+      error
+    } =
+      await supabaseClient
+        .from("volunteers")
+        .select("*")
+        .order(
+          "created_at",
+          {
+            ascending: false
+          }
+        );
 
-    return;
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+
+      list.innerHTML =
+        "<p>No volunteer applications yet.</p>";
+
+      return;
+    }
+
+    list.innerHTML =
+      data.map(function(item) {
+
+        return `
+
+          <div class="admin-card">
+
+            <h3>
+              ${escapeHTML(item.full_name)}
+            </h3>
+
+            <p>
+              <strong>Volunteer ID:</strong>
+              ${escapeHTML(item.volunteer_id)}
+            </p>
+
+            <p>
+              <strong>Instagram:</strong>
+              ${escapeHTML(item.instagram_username)}
+            </p>
+
+            <p>
+              <strong>Status:</strong>
+              ${escapeHTML(item.status || "pending")}
+            </p>
+
+            <div class="admin-actions">
+
+              <button
+                class="primary-btn"
+                onclick="updateVolunteerStatus('${item.id}','approved')"
+              >
+                Approve
+              </button>
+
+              <button
+                class="secondary-btn"
+                onclick="updateVolunteerStatus('${item.id}','rejected')"
+              >
+                Reject
+              </button>
+
+              <button
+                class="secondary-btn"
+                onclick="viewVolunteer('${item.id}')"
+              >
+                View Details
+              </button>
+
+            </div>
+
+          </div>
+
+        `;
+
+      }).join("");
+
+  } catch (error) {
+
+    console.error(error);
+
+    list.innerHTML =
+      "<p>Volunteers load nahi ho paye.</p>";
+
   }
 
-  if(password !== confirm){
-
-    msg.className="notice error";
-    msg.textContent=
-      "Dono passwords same hone chahiye.";
-
-    return;
-  }
-
-  if(password.length < 6){
-
-    msg.className="notice error";
-    msg.textContent=
-      "Password kam se kam 6 characters ka rakhein.";
-
-    return;
-  }
-
-  const {error} =
-    await supabaseClient.auth.updateUser({
-      password
-    });
-
-  if(error){
-
-    msg.className="notice error";
-    msg.textContent=
-      "Password update nahi ho paya.";
-
-    return;
-  }
-
-  msg.className="notice success";
-  msg.textContent=
-    "Password successfully update ho gaya.";
-
-  setTimeout(async()=>{
-    await supabaseClient.auth.signOut();
-
-    document.getElementById("resetPage")
-      .classList.add("hidden");
-
-    document.getElementById("loginPage")
-      .classList.remove("hidden");
-
-  },1500);
 }
 
 
-/* =========================================
-   LOGOUT
-========================================= */
+async function updateVolunteerStatus(
+  id,
+  status
+) {
 
-async function logout(){
-
-  await supabaseClient.auth.signOut();
-
-  document.getElementById("adminApp")
-    .classList.add("hidden");
-
-  document.getElementById("loginPage")
-    .classList.remove("hidden");
-
-  document.getElementById("loginPassword")
-    .value="";
-}
-
-
-/* =========================================
-   SESSION CHECK
-========================================= */
-
-async function checkSession(){
-
-  const {data} =
-    await supabaseClient.auth.getSession();
-
-  const session=data.session;
-
-  if(!session) return;
-
-  /*
-    Password recovery session
-  */
-
-  if(
-    window.location.hash.includes("type=recovery")
-  ){
-
-    document.getElementById("loginPage")
-      .classList.add("hidden");
-
-    document.getElementById("resetPage")
-      .classList.remove("hidden");
-
-    return;
-  }
-
-  const {error} =
+  const {
+    error
+  } =
     await supabaseClient
       .from("volunteers")
-      .select("id")
-      .limit(1);
+      .update({
+        status
+      })
+      .eq("id", id);
 
-  if(error){
+  if (error) {
 
-    await supabaseClient.auth.signOut();
+    console.error(error);
+
+    alert(
+      "Status update nahi ho paya."
+    );
+
     return;
   }
 
-  document.getElementById("loginPage")
-    .classList.add("hidden");
-
-  document.getElementById("adminApp")
-    .classList.remove("hidden");
-
-  await loadDashboard();
+  loadVolunteers();
 }
 
 
-/* =========================================
-   DASHBOARD
-========================================= */
+/* CERTIFICATES */
 
-async function loadDashboard(){
+async function loadCertificates() {
 
-  const [
-    volunteers,
-    pending,
-    certificates,
-    messages
-  ] = await Promise.all([
+  const list =
+    document.getElementById(
+      "certificateList"
+    );
 
-    supabaseClient
-      .from("volunteers")
-      .select("id",{count:"exact",head:true}),
+  if (!list) return;
 
-    supabaseClient
-      .from("volunteers")
-      .select("id",{count:"exact",head:true})
-      .eq("status","pending"),
+  list.innerHTML =
+    "<p>Loading certificates...</p>";
 
-    supabaseClient
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
       .from("certificates")
-      .select("id",{count:"exact",head:true}),
-
-    supabaseClient
-      .from("contact_messages")
-      .select("id",{count:"exact",head:true})
-
-  ]);
-
-  document.getElementById("statVolunteers")
-    .textContent=volunteers.count || 0;
-
-  document.getElementById("statPending")
-    .textContent=pending.count || 0;
-
-  document.getElementById("statCertificates")
-    .textContent=certificates.count || 0;
-
-  document.getElementById("statMessages")
-    .textContent=messages.count || 0;
-}
-
-
-/* =========================================
-   VOLUNTEERS
-========================================= */
-
-async function loadVolunteers(){
-
-  const tbody=
-    document.getElementById("volunteerRows");
-
-  tbody.innerHTML=
-    `<tr><td colspan="8">Loading...</td></tr>`;
-
-  const {data,error} =
-    await supabaseClient
-      .from("volunteers")
       .select("*")
-      .order("created_at",{ascending:false});
+      .order(
+        "issue_date",
+        {
+          ascending: false
+        }
+      );
 
-  if(error){
+  if (error) {
 
-    tbody.innerHTML=
-      `<tr><td colspan="8">Volunteers load nahi ho paye.</td></tr>`;
+    console.error(error);
+
+    list.innerHTML =
+      "<p>Certificates load nahi ho paye.</p>";
 
     return;
   }
 
-  if(!data || !data.length){
- 
+  list.innerHTML =
+    (data || []).map(function(item) {
+
+      return `
+
+        <div class="admin-card">
+
+          <h3>
+            ${escapeHTML(item.volunteer_name)}
+          </h3>
+
+          <p>
+            <strong>Certificate ID:</strong>
+            ${escapeHTML(item.certificate_id)}
+          </p>
+
+          <p>
+            <strong>Volunteer ID:</strong>
+            ${escapeHTML(item.volunteer_id)}
+          </p>
+
+          <p>
+            <strong>Status:</strong>
+            ${escapeHTML(item.status)}
+          </p>
+
+          <button
+            class="primary-btn"
+            onclick="printCertificate('${item.id}')"
+          >
+            Print Certificate
+          </button>
+
+          <button
+            class="secondary-btn"
+            onclick="revokeCertificate('${item.id}')"
+          >
+            Revoke
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("") ||
+    "<p>No certificates yet.</p>";
+
+}
+
+
+async function revokeCertificate(id) {
+
+  if (
+    !confirm(
+      "Certificate revoke karna hai?"
+    )
+  ) return;
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("certificates")
+      .update({
+        status: "revoked"
+      })
+      .eq("id", id);
+
+  if (error) {
+
+    console.error(error);
+
+    alert(
+      "Certificate revoke nahi ho paya."
+    );
+
+    return;
+  }
+
+  loadCertificates();
+}
+
+
+/* NEWS */
+
+async function loadNews() {
+
+  const list =
+    document.getElementById(
+      "newsList"
+    );
+
+  if (!list) return;
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("news")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+  }
+
+  list.innerHTML =
+    (data || []).map(function(item) {
+
+      return `
+
+        <div class="admin-card">
+
+          <h3>
+            ${escapeHTML(item.title)}
+          </h3>
+
+          <p>
+            ${escapeHTML(item.content)}
+          </p>
+
+          <button
+            class="secondary-btn"
+            onclick="deleteNews('${item.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("") ||
+    "<p>No news available.</p>";
+
+}
+
+
+async function deleteNews(id) {
+
+  if (
+    !confirm(
+      "News delete karna hai?"
+    )
+  ) return;
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("news")
+      .delete()
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "News delete nahi ho payi."
+    );
+
+    return;
+  }
+
+  loadNews();
+}
+
+
+/* EVENTS */
+
+async function loadEvents() {
+
+  const list =
+    document.getElementById(
+      "eventList"
+    );
+
+  if (!list) return;
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("events")
+      .select("*")
+      .order(
+        "event_date",
+        {
+          ascending: true
+        }
+      );
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+  }
+
+  list.innerHTML =
+    (data || []).map(function(item) {
+
+      return `
+
+        <div class="admin-card">
+
+          <h3>
+            ${escapeHTML(item.title)}
+          </h3>
+
+          <p>
+            <strong>Date:</strong>
+            ${formatDate(item.event_date)}
+          </p>
+
+          <p>
+            ${escapeHTML(item.description || "")}
+          </p>
+
+          <button
+            class="secondary-btn"
+            onclick="deleteEvent('${item.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("") ||
+    "<p>No events available.</p>";
+
+}
+
+
+async function deleteEvent(id) {
+
+  if (
+    !confirm(
+      "Event delete karna hai?"
+    )
+  ) return;
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("events")
+      .delete()
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Event delete nahi ho paya."
+    );
+
+    return;
+  }
+
+  loadEvents();
+}
+
+
+/* ACHIEVEMENTS */
+
+async function loadAchievements() {
+
+  const list =
+    document.getElementById(
+      "achievementList"
+    );
+
+  if (!list) return;
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("achievements")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+  }
+
+  list.innerHTML =
+    (data || []).map(function(item) {
+
+      return `
+
+        <div class="admin-card">
+
+          <h3>
+            ${escapeHTML(item.title)}
+          </h3>
+
+          <p>
+            ${escapeHTML(item.description)}
+          </p>
+
+          <button
+            class="secondary-btn"
+            onclick="deleteAchievement('${item.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("") ||
+    "<p>No achievements available.</p>";
+
+}
+
+
+async function deleteAchievement(id) {
+
+  if (
+    !confirm(
+      "Achievement delete karna hai?"
+    )
+  ) return;
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("achievements")
+      .delete()
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Achievement delete nahi ho paya."
+    );
+
+    return;
+  }
+
+  loadAchievements();
+}
+
+
+/* MESSAGES */
+
+async function loadMessages() {
+
+  const list =
+    document.getElementById(
+      "messageList"
+    );
+
+  if (!list) return;
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("contact_messages")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending: false
+        }
+      );
+
+  if (error) {
+
+    console.error(error);
+
+    return;
+  }
+
+  list.innerHTML =
+    (data || []).map(function(item) {
+
+      return `
+
+        <div class="admin-card">
+
+          <h3>
+            ${escapeHTML(item.name)}
+          </h3>
+
+          <p>
+            <strong>Email:</strong>
+            ${escapeHTML(item.email)}
+          </p>
+
+          <p style="white-space:pre-wrap;">
+            ${escapeHTML(item.message)}
+          </p>
+
+          <button
+            class="secondary-btn"
+            onclick="deleteMessage('${item.id}')"
+          >
+            Delete
+          </button>
+
+        </div>
+
+      `;
+
+    }).join("") ||
+    "<p>No messages yet.</p>";
+
+}
+
+
+async function deleteMessage(id) {
+
+  if (
+    !confirm(
+      "Message delete karna hai?"
+    )
+  ) return;
+
+  const {
+    error
+  } =
+    await supabaseClient
+      .from("contact_messages")
+      .delete()
+      .eq("id", id);
+
+  if (error) {
+
+    alert(
+      "Message delete nahi ho paya."
+    );
+
+    return;
+  }
+
+  loadMessages();
+}
+
+
+/* INITIALIZE */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    checkAdminSession();
+
+  }
+);
+
+</script>
+
+</body>
+</html>
+            data.certificate_id
+      );
+
+
+      const printWindow =
+        window.open("", "_blank");
+
+
+      if (!printWindow) {
+
+        alert(
+          "Browser popup blocked hai. Popup allow karke dobara try karo."
+        );
+
+        return;
+      }
+
+
+      printWindow.document.write(`
+
+        <!DOCTYPE html>
+
+        <html>
+
+        <head>
+
+          <title>
+            Certificate -
+            ${escapeHTML(data.certificate_id)}
+          </title>
+
+          <style>
+
+            * {
+              box-sizing: border-box;
+            }
+
+            body {
+
+              margin: 0;
+
+              font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+              background: #eeeeee;
+
+            }
+
+
+            .certificate {
+
+              width: 297mm;
+
+              min-height: 210mm;
+
+              margin: 20px auto;
+
+              padding: 25mm;
+
+              background: white;
+
+              border: 8px solid #0755a5;
+
+              position: relative;
+
+              text-align: center;
+
+            }
+
+
+            .organization {
+
+              font-size: 30px;
+
+              font-weight: 800;
+
+              letter-spacing: 2px;
+
+              color: #0755a5;
+
+              margin-top: 10px;
+
+            }
+
+
+            .tagline {
+
+              margin-top: 8px;
+
+              font-size: 13px;
+
+              letter-spacing: 1px;
+
+              color: #667085;
+
+            }
+
+
+            .certificate-title {
+
+              margin-top: 35px;
+
+              font-size: 30px;
+
+              font-weight: 800;
+
+              letter-spacing: 2px;
+
+              color: #1d2939;
+
+            }
+
+
+            .presented {
+
+              margin-top: 30px;
+
+              font-size: 17px;
+
+              color: #475467;
+
+            }
+
+
+            .volunteer-name {
+
+              margin-top: 15px;
+
+              font-size: 34px;
+
+              font-weight: 800;
+
+              color: #0755a5;
+
+              border-bottom: 2px solid #d0d5dd;
+
+              display: inline-block;
+
+              padding: 0 30px 8px;
+
+            }
+
+
+            .certificate-text {
+
+              max-width: 760px;
+
+              margin: 25px auto 0;
+
+              font-size: 17px;
+
+              line-height: 1.8;
+
+              color: #344054;
+
+            }
+
+
+            .details {
+
+              margin-top: 28px;
+
+              font-size: 15px;
+
+              line-height: 1.9;
+
+              color: #344054;
+
+            }
+
+
+            .stamp {
+
+              position: absolute;
+
+              left: 28mm;
+
+              bottom: 25mm;
+
+              width: 105px;
+
+              height: 105px;
+
+              border: 3px solid #0755a5;
+
+              border-radius: 50%;
+
+              display: flex;
+
+              align-items: center;
+
+              justify-content: center;
+
+              text-align: center;
+
+              font-size: 11px;
+
+              font-weight: 800;
+
+              line-height: 1.3;
+
+              color: #0755a5;
+
+            }
+
+
+            .qr {
+
+              position: absolute;
+
+              right: 28mm;
+
+              bottom: 25mm;
+
+            }
+
+
+            .footer-text {
+
+              position: absolute;
+
+              bottom: 12mm;
+
+              left: 0;
+
+              right: 0;
+
+              font-size: 11px;
+
+              color: #98a2b3;
+
+            }
+
+
+            @media print {
+
+              body {
+
+                background: white;
+
+              }
+
+
+              .certificate {
+
+                margin: 0;
+
+                width: 297mm;
+
+                min-height: 210mm;
+
+              }
+
+            }
+
+          </style>
+
+        </head>
+
+
+        <body>
+
+          <div class="certificate">
+
+
+            <div class="organization">
+
+              BADLEGA KHAGARIA
+
+            </div>
+
+
+            <div class="tagline">
+
+              A VOICE OF CHANGE •
+              A MOVEMENT FOR THE FUTURE
+
+            </div>
+
+
+            <div class="certificate-title">
+
+              CERTIFICATE OF VOLUNTEERSHIP
+
+            </div>
+
+
+            <div class="presented">
+
+              This certificate is proudly presented to
+
+            </div>
+
+
+            <div class="volunteer-name">
+
+              ${escapeHTML(data.volunteer_name)}
+
+            </div>
+
+
+            <div class="certificate-text">
+
+              For volunteering with
+
+              <strong>
+                BADLEGA KHAGARIA ORGANIZATION
+              </strong>
+
+              and contributing towards positive
+              change, awareness and community
+              development in Khagaria.
+
+            </div>
+
+
+            <div class="details">
+
+              <strong>
+                Volunteer ID:
+              </strong>
+
+              ${escapeHTML(data.volunteer_id)}
+
+              <br>
+
+
+              <strong>
+                Certificate ID:
+              </strong>
+
+              ${escapeHTML(data.certificate_id)}
+
+              <br>
+
+
+              <strong>
+                Issue Date:
+              </strong>
+
+              ${formatDate(data.issue_date)}
+
+            </div>
+
+
+            <div class="stamp">
+
+              BADLEGA<br>
+              KHAGARIA<br>
+              ORGANIZATION
+
+            </div>
+
+
+            <div
+              id="certificateQR"
+              class="qr"
+            ></div>
+
+
+            <div class="footer-text">
+
+              Scan the QR code to verify
+              this certificate online.
+
+            </div>
+
+
+          </div>
+
+
+          <script>
+
+            new QRCode(
+
+              document.getElementById(
+                "certificateQR"
+              ),
+
+              {
+
+                text:
+                  ${JSON.stringify(verificationURL)},
+
+                width: 110,
+
+                height: 110
+
+              }
+
+            );
+
+
+            setTimeout(
+              function() {
+
+                window.print();
+
+              },
+              1000
+            );
+
+          <\/script>
+
+
+        </body>
+
+        </html>
+
+      `);
+
+
+      printWindow.document.close();
+
+
+    } catch (error) {
+
+      console.error(
+        "Print certificate error:",
+        error
+      );
+
+
+      alert(
+        "Certificate print nahi ho paya."
+      );
+
+    }
+
+}
+
+
+/* =========================================================
+   INITIALIZE ADMIN PANEL
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
+
+    checkAdminSession();
+
+  }
+);
+
+</script>
+
+
+</body>
+        </html>
